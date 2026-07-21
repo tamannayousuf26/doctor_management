@@ -1,0 +1,49 @@
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">User Profile</h4> <hr/>
+        <form [formGroup]="profileFormGroup" (ngSubmit)="onSubmit()">
+            <div class="container">
+                <img alt="" class="rounded-circle" src="assets/images/logo.jpg"
+                     style="width: 100px;height: 100px; margin: 10px">
+            </div>
+            <mat-form-field appearance="outline" class="w-100 fs-16">
+                <mat-label>User Name</mat-label>
+                <input readonly matInput formControlName="username" type="text">
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100 fs-16">
+                <mat-label>Old Password</mat-label>
+                <input matInput placeholder="Old Password" formControlName="old_password"
+                       [type]="visibilityForPass ? 'text' : 'password'">
+                <mat-icon matSuffix (click)="toggleVisibility('password')">
+                    {{visibilityForPass ? 'visibility' : 'visibility_off'}}
+                </mat-icon>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="w-100 fs-16">
+                <mat-label>Enter New Password</mat-label>
+                <input matInput placeholder="New Password" formControlName="password"
+                       [type]="visibilityForNewPass ? 'text' : 'password'">
+                <mat-icon matSuffix (click)="toggleVisibility('new')">
+                    {{visibilityForNewPass ? 'visibility' : 'visibility_off'}}
+                </mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100 fs-16">
+                <mat-label>Re Enter New Password</mat-label>
+                <input matInput [type]="visibilityForConfirmedPass ? 'text' : 'password'"
+                       placeholder="Re-enter Password" formControlName="password_confirmation">
+                <mat-icon matSuffix (click)="toggleVisibility('confirmed')">
+                    {{visibilityForConfirmedPass ? 'visibility' : 'visibility_off'}}
+                </mat-icon>
+            </mat-form-field>
+            <mat-grid-list cols="4" rowHeight="40px">
+                <mat-grid-tile colspan="3">
+                    <button class="block-btn-global submit-btn-global" color="primary" mat-raised-button>Update</button>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1">
+                    <button class="block-btn-global cancel-btn-global" color="danger" mat-raised-button>Cancel</button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+    </div>
+</div>

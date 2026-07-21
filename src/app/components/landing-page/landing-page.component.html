@@ -1,0 +1,503 @@
+<section class="header">
+  <nav>
+    <img
+      class="rounded-circle"
+      style="height: 50px; width: 50px; margin: 10px"
+      src="../../../assets/images/logo.jpg"
+    />
+    <div class="nav-links" id="navLinks">
+      <ul>
+        <li class="hide-on-mobile">
+          <a (click)="scroll(about)" class="cursor">About</a>
+        </li>
+        <li class="hide-on-mobile">
+          <a (click)="scroll(why)" class="cursor">Why Us</a>
+        </li>
+        <li class="hide-on-mobile">
+          <a (click)="scroll(contact)" class="cursor">Contact</a>
+        </li>
+        <li><a [href]="apiConfig.downloadPdfUrl + 'labform'">Lab Form</a></li>
+        <li><a [href]="apiConfig.loginUrl">Login</a></li>
+      </ul>
+    </div>
+  </nav>
+</section>
+<ngb-carousel [interval]="2000">
+  <ng-template ngbSlide>
+    <div class="slider-parent">
+      <img
+        src="../../../assets/images/Dentures.png"
+        alt="Slide 1"
+        style="width: 100%; height: 50%"
+      />
+      <div class="slider-overlay-background"></div>
+      <div class="slider-overly-text">
+        <div class="text-box">
+          <h1 style="color: #527853">VIVADENT DENTAL LABORATORY</h1>
+          <h3 style="margin-bottom: 20px; color: #527853">
+            Urgency Is Our Priority
+          </h3>
+          <a (click)="scroll(target)" class="hero-btn">Find Us In Map!</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbSlide>
+    <div class="slider-parent">
+      <img
+        src="../../../assets/images/Zirconia.png"
+        alt="Slide 2"
+        style="width: 100%; height: 50%"
+      />
+      <div class="slider-overlay-background"></div>
+      <div class="slider-overly-text">
+        <div class="text-box">
+          <h1 style="color: #527853">VIVADENT DENTAL LABORATORY</h1>
+          <h3 style="margin-bottom: 20px; color: #527853">
+            Urgency Is Our Priority
+          </h3>
+          <a (click)="scroll(target)" class="hero-btn">Find Us In Map!</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbSlide>
+    <div class="slider-parent">
+      <img
+        src="../../../assets/images/PFM.png"
+        alt="Slide 3"
+        style="width: 100%; height: 50%"
+      />
+      <div class="slider-overlay-background"></div>
+      <div class="slider-overly-text">
+        <div class="text-box">
+          <h1 style="color: #527853">VIVADENT DENTAL LABORATORY</h1>
+          <h3 style="margin-bottom: 20px; color: #527853">
+            Urgency Is Our Priority
+          </h3>
+          <a (click)="scroll(target)" class="hero-btn">Find Us In Map!</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template ngbSlide>
+    <div class="slider-parent">
+      <img
+        src="../../../assets/images/E-max.png"
+        alt="Slide 4"
+        style="width: 100%; height: 50%"
+      />
+      <div class="slider-overlay-background"></div>
+      <div class="slider-overly-text">
+        <div class="text-box">
+          <h1 style="color: #527853">VIVADENT DENTAL LABORATORY</h1>
+          <h3 style="margin-bottom: 20px; color: #527853">
+            Urgency Is Our Priority
+          </h3>
+          <a (click)="scroll(target)" class="hero-btn">Find Us In Map!</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template ngbSlide>
+    <div class="slider-parent">
+      <img
+        src="../../../assets/images/jakie.jpg"
+        alt="Slide 5"
+        style="width: 100%; height: 50%"
+      />
+      <div class="slider-overlay-background"></div>
+      <div class="slider-overly-text">
+        <div class="text-box">
+          <h1 style="color: #527853">VIVADENT DENTAL LABORATORY</h1>
+          <h3 style="margin-bottom: 20px; color: #527853">
+            Urgency Is Our Priority
+          </h3>
+          <a (click)="scroll(target)" class="hero-btn">Find Us In Map!</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template ngbSlide>
+    <div class="slider-parent">
+      <img
+        src="../../../assets/images/mad-max.jpg"
+        alt="Slide 6"
+        style="width: 100%; height: 50%"
+      />
+      <div class="slider-overlay-background"></div>
+      <div class="slider-overly-text">
+        <div class="text-box">
+          <h1 style="color: #527853">VIVADENT DENTAL LABORATORY</h1>
+          <h3 style="margin-bottom: 20px; color: #527853">
+            Urgency Is Our Priority
+          </h3>
+          <a (click)="scroll(target)" class="hero-btn">Find Us In Map!</a>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</ngb-carousel>
+
+<!-- ---------- Facilities-------- -->
+<section class="facilities-section">
+  <div class="facilities-container">
+    <div class="facilities-header">
+      <h1>Our Facilities</h1>
+      <p class="facilities-subtitle">
+        Comprehensive dental laboratory services with cutting-edge technology
+        and premium materials
+      </p>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="facilities-tabs">
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'crowns'"
+        (click)="setActiveTab('crowns')"
+      >
+        <i-feather name="award"></i-feather>
+        <span>Crowns & Bridges</span>
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'orthodontics'"
+        (click)="setActiveTab('orthodontics')"
+      >
+        <i-feather name="activity"></i-feather>
+        <span>Hawley Retainers</span>
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'dentures'"
+        (click)="setActiveTab('dentures')"
+      >
+        <i-feather name="smile"></i-feather>
+        <span>Dentures</span>
+      </button>
+      <button
+        class="tab-btn"
+        [class.active]="activeTab === 'other'"
+        (click)="setActiveTab('other')"
+      >
+        <i-feather name="package"></i-feather>
+        <span>Other Services</span>
+      </button>
+    </div>
+
+    <!-- Facilities Marquee Carousel -->
+    <div
+      class="facilities-marquee-wrapper"
+      (mouseenter)="pauseMarquee()"
+      (mouseleave)="resumeMarquee()"
+    >
+      <div class="marquee-fade-left"></div>
+      <div class="marquee-fade-right"></div>
+      <div class="marquee-track" [class.paused]="isMarqueePaused">
+        <!-- First set of cards -->
+        <div class="marquee-content">
+          <div
+            class="facility-card"
+            *ngFor="let facility of getAllActiveFacilities()"
+          >
+            <div class="facility-image-wrapper">
+              <img
+                [src]="'../../../assets/images/' + facility.image"
+                [alt]="facility.title"
+                class="facility-image"
+              />
+              <div class="facility-overlay">
+                <span class="view-text">View Details</span>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3 class="facility-title">{{ facility.title }}</h3>
+              <p class="facility-description">{{ facility.description }}</p>
+            </div>
+          </div>
+        </div>
+        <!-- Duplicate set for seamless loop -->
+        <div class="marquee-content">
+          <div
+            class="facility-card"
+            *ngFor="let facility of getAllActiveFacilities()"
+          >
+            <div class="facility-image-wrapper">
+              <img
+                [src]="'../../../assets/images/' + facility.image"
+                [alt]="facility.title"
+                class="facility-image"
+              />
+              <div class="facility-overlay">
+                <span class="view-text">View Details</span>
+              </div>
+            </div>
+            <div class="facility-content">
+              <h3 class="facility-title">{{ facility.title }}</h3>
+              <p class="facility-description">{{ facility.description }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About Us -->
+<section class="about-section" #about>
+  <div class="about-container">
+    <div class="about-header">
+      <!-- <span class="about-tag">Who We Are</span> -->
+      <h1>About Us</h1>
+      <p class="about-subtitle">
+        Delivering excellence in dental laboratory services with precision,
+        quality, and care.
+      </p>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="about-icon">
+          <i-feather name="award"></i-feather>
+        </div>
+        <h3>Quality Focused</h3>
+        <p>
+          Our dental lab is highly focused in providing services unlike other
+          dental lab. We meet your expectation for high quality products so that
+          you don't need to worry about adjusting the work and spend your
+          valuable time on your patient.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <div class="about-icon">
+          <i-feather name="clock"></i-feather>
+        </div>
+        <h3>Fast Turnaround</h3>
+        <p>
+          Time is essence, we take your cases with urgency so that you can
+          provide your patient with high quality product in minimum time.
+        </p>
+      </div>
+
+      <div class="about-card">
+        <div class="about-icon">
+          <i-feather name="target"></i-feather>
+        </div>
+        <h3>Our Mission</h3>
+        <p>
+          Our goal is to provide exceptional dental laboratory products with
+          less fuss. We strive to be your trusted partner in dental care.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ----------- Find Us On Google Map -------- -->
+<section class="location-section" #target>
+  <div class="location-container">
+    <div class="location-header">
+      <!-- <span class="location-tag">Visit Us</span> -->
+      <h1>Find Our Location</h1>
+      <p class="location-subtitle">
+        We're conveniently located in Shah Alam, Selangor. Drop by our lab or
+        get in touch!
+      </p>
+    </div>
+
+    <div class="location-content">
+      <div class="location-info">
+        <div class="info-card">
+          <div class="info-icon">
+            <i-feather name="map-pin"></i-feather>
+          </div>
+          <div class="info-details">
+            <h4>Our Address</h4>
+            <p>
+              No 43, Tingkat Atas, Jalan Pinang B 18/B, Seksyen 18, 40200 Shah
+              Alam, Selangor, Malaysia
+            </p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">
+            <i-feather name="phone"></i-feather>
+          </div>
+          <div class="info-details">
+            <h4>Phone Numbers</h4>
+            <p>Admin: 011 8888 6191</p>
+            <p>Finance: 016 676 2891</p>
+            <p>Technician: 016 444 1905</p>
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">
+            <i-feather name="mail"></i-feather>
+          </div>
+          <div class="info-details">
+            <h4>Email Us</h4>
+            <a href="mailto:vivadentsdnbhd@gmail.com"
+              >vivadentsdnbhd@gmail.com</a
+            >
+          </div>
+        </div>
+
+        <div class="info-card">
+          <div class="info-icon">
+            <i-feather name="clock"></i-feather>
+          </div>
+          <div class="info-details">
+            <h4>Working Hours</h4>
+            <p>Monday - Friday: 9:00 AM - 6:00 PM</p>
+            <p>Saturday: 9:00 AM - 1:00 PM</p>
+          </div>
+        </div>
+
+        <a
+          href="https://maps.google.com/maps?q=Vivadent%20Dental%20Laboratory%20Selangor,%20Malaysia"
+          target="_blank"
+          class="directions-btn"
+        >
+          <i-feather name="navigation"></i-feather>
+          Get Directions
+        </a>
+      </div>
+
+      <div class="map-wrapper">
+        <div class="map-container">
+          <iframe
+            width="100%"
+            height="100%"
+            id="gmap_canvas"
+            src="https://maps.google.com/maps?q=Vivadent%20Dental%20Laboratory%20Selangor,%20Malaysia&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            frameborder="0"
+            scrolling="no"
+            loading="lazy"
+          ></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ----------- Call To Action -------- -->
+<section
+  #why
+  class="cta"
+  style="
+    background-image: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+      url('../../../assets/images/why-us.jpg');
+  "
+>
+  <h1>Why Us</h1>
+  <ul>
+    <li>Our dental lab provide fast and hassle free service.</li>
+    <li>
+      We guarantee that you don't spend much chair time adjusting the dentures.
+    </li>
+    <li>
+      We make sure that your patient will be happy with the dentures from our
+      lab.
+    </li>
+  </ul>
+</section>
+
+<!-- ----------- Footer -------- -->
+<section class="footer contact-us" #contact>
+  <div class="contact-us-header">
+    <div style="margin: auto 0">
+      <img
+        src="../../../assets/images/logo.jpg"
+        style="
+          height: 40px;
+          width: 40px;
+          border-radius: 50%;
+          margin-right: 10px;
+        "
+      />
+    </div>
+    <div>
+      <h4 style="color: #527853">VIVADENT DENTAL LABORATORY</h4>
+    </div>
+  </div>
+  <div>
+    <p>
+      A complete Dental Laboratory, provides All in "One Lab" service (PFM,
+      Zirconia, E-max, Implant Crown, Flexible and CCP Dentures, Ortho
+      Appliance).
+    </p>
+
+    <div
+      style="
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 10px;
+      "
+    >
+      <i-feather class="contact-us-icon" name="mail"></i-feather>
+      <a
+        href="mailto:vivadentsdnbhd@gmail.com"
+        style="margin-top: 5px; color: #777"
+        >vivadentsdnbhd@gmail.com</a
+      >
+    </div>
+    <div style="display: flex; justify-content: center">
+      <i-feather class="contact-us-icon" name="phone"></i-feather>
+      <p>
+        Admin : 011 8888 6191 | Finance : 016 676 2891 | Technician: 016 444
+        1905
+      </p>
+    </div>
+    <div style="display: flex; justify-content: center">
+      <span style="margin-bottom: 5px; margin-top: 10px"
+        >Customer Service Admin Cases In/Out: 011 8888 6191</span
+      >
+    </div>
+    <div style="display: flex; justify-content: center">
+      <span style="margin-bottom: 5px"
+        >Technical Support Line(Dental Technician): 016 444 1905</span
+      >
+    </div>
+    <div style="display: flex; justify-content: center">
+      <span style="margin-bottom: 5px"
+        >Billing & Accounts Enquiries: 016 676 2891</span
+      >
+    </div>
+    <div style="display: flex; justify-content: center">
+      <i-feather class="contact-us-icon" name="map-pin"></i-feather>
+      <p>
+        No 43, Tingkat Atas, Jalan Pinang B 18/B, Seksyen 18, 40200 Shah Alam,
+        Selangor, Malaysia
+      </p>
+    </div>
+  </div>
+
+  <div class="copyright">
+    <div>
+      <p>
+        © {{ currentYear }} Copyright:
+        <a href="#" style="color: #51b984">Vivadent SDN BHD</a>
+      </p>
+    </div>
+    <div>
+      <p style="padding: 5px 0px !important">
+        Made with
+        <i-feather name="heart" class="heart"></i-feather>
+        <a
+          href="https://abdullah-al-jahid.vercel.app/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Abdullah Al Jahid
+        </a>
+      </p>
+    </div>
+  </div>
+</section>

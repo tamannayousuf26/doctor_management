@@ -1,0 +1,53 @@
+<h2 mat-dialog-title>Share Report Link</h2>
+<mat-dialog-content>
+  <p class="description">Copy the link or send it via WhatsApp:</p>
+
+  <!-- Link Display and Copy -->
+  <div class="link-container">
+    <input
+      type="text"
+      class="link-input"
+      [value]="data.link"
+      readonly
+      #linkInput
+    />
+    <button
+      mat-raised-button
+      color="primary"
+      class="copy-btn"
+      (click)="copyLink()"
+    >
+      <mat-icon>{{ copied ? "check" : "content_copy" }}</mat-icon>
+      {{ copied ? "Copied!" : "Copy" }}
+    </button>
+  </div>
+
+  <!-- WhatsApp Section -->
+  <div class="whatsapp-section">
+    <p class="whatsapp-label">Send via WhatsApp:</p>
+    <div class="whatsapp-container">
+      <mat-form-field appearance="outline" class="phone-input">
+        <mat-label>WhatsApp Number</mat-label>
+        <input
+          matInput
+          [(ngModel)]="whatsappNumber"
+          placeholder="e.g., 60123456789"
+          type="tel"
+        />
+      </mat-form-field>
+      <button
+        mat-raised-button
+        class="whatsapp-btn"
+        (click)="shareOnWhatsApp()"
+        [disabled]="!whatsappNumber"
+      >
+        <mat-icon>send</mat-icon>
+        Send to WhatsApp
+      </button>
+    </div>
+    <mat-hint>Enter number with country code (e.g., 60 1188886191)</mat-hint>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-flat-button color="warn" (click)="close()">Close</button>
+</mat-dialog-actions>

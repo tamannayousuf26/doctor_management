@@ -1,0 +1,69 @@
+<mat-card class="w-100">
+    <mat-card-content>
+        <h4 class="card-title">Create Attendance</h4> <hr/>
+        <mat-form-field appearance="outline">
+            <input (dateChange)="addEvent($event)"
+                   (focus)="picker.open()" [matDatepicker]="picker" matInput
+                   placeholder="Attendance Date">
+            <mat-hint>DD/MM/YYYY</mat-hint>
+        </mat-form-field>
+        <mat-datepicker #picker></mat-datepicker>
+
+        <div *ngIf="attendanceList; else elseBlock">
+            <table class="datatable">
+                <thead>
+                <tr>
+                    <th>Employee ID</th>
+                    <th>Employee Name</th>
+                    <th>Present</th>
+                    <th>Half Present</th>
+                    <th>Leave</th>
+                    <th>Absent</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let p of attendanceList; let i=index; let odd = odd"
+                    [ngClass]="odd ? 'odd_col' : 'even_col'">
+                    <td>{{ p.id }}</td>
+                    <td>{{ p.name }}</td>
+                    <td>
+                        <mat-checkbox [(ngModel)]="attendanceList[i].present" class="d-block mb-16" color="primary"
+                                      value="{{p.present}}">P
+                        </mat-checkbox>
+                    </td>
+                    <td>
+                        <mat-checkbox [(ngModel)]="attendanceList[i].halfPresent" class="d-block mb-16" color="primary"
+                                      value="{{p.halfPresent}}">HP
+                        </mat-checkbox>
+                    </td>
+                    <td>
+                        <mat-checkbox [(ngModel)]="attendanceList[i].leave" class="d-block mb-16" color="primary"
+                                      value="{{p.leave}}">L
+                        </mat-checkbox>
+                    </td>
+                    <td>
+                        <mat-checkbox [(ngModel)]="attendanceList[i].absent" class="d-block mb-16" color="primary"
+                                      value="{{p.absent}}">A
+                        </mat-checkbox>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <mat-grid-list cols="4" rowHeight="40px">
+                <mat-grid-tile colspan="3">
+                    <button (click)="onSubmit()" class="block-btn-global submit-btn-global" color="primary"
+                            mat-raised-button>Create
+                    </button>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1">
+                    <button (click)="cancel()" class="block-btn-global cancel-btn-global" color="danger"
+                            mat-raised-button>Cancel
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </div>
+        <ng-template #elseBlock>No record found</ng-template>
+    </mat-card-content>
+</mat-card>
+

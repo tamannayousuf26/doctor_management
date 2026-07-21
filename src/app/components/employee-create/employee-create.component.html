@@ -1,0 +1,70 @@
+<div class="card employee-card">
+    <div class="card-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">{{updateEmployeeId == null ? 'person_add' : 'edit'}}</mat-icon>
+            <h4 class="card-title">{{updateEmployeeId == null ? 'Create New Employee' : 'Update Employee'}}</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="employeeFormGroup" (ngSubmit)="onSubmit()">
+            <div class="photo-section" *ngIf="updateEmployeeId == null">
+                <div class="photo-upload">
+                    <div class="photo-preview">
+                        <img *ngIf="url" [src]="url" alt="Employee photo" class="rounded-circle">
+                        <div *ngIf="!url" class="photo-placeholder">
+                            <mat-icon>add_photo_alternate</mat-icon>
+                            <span>Upload NID Photo</span>
+                        </div>
+                    </div>
+                    <input type="file" #fileUpload accept="image/*" (change)="onFileSelected($event)" class="file-input">
+                    <button type="button" mat-stroked-button class="upload-btn" (click)="fileUpload.click()">
+                        <mat-icon>cloud_upload</mat-icon>
+                        Choose Photo
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <div class="form-row three-columns">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Employee Name</mat-label>
+                        <input matInput placeholder="Enter employee name" formControlName="name" type="text">
+                        <mat-icon matPrefix>person</mat-icon>
+                        <mat-error *ngIf="employeeFormGroup.get('name')?.hasError('required')">
+                            Name is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Phone</mat-label>
+                        <input matInput placeholder="Enter phone number" formControlName="phone" type="tel">
+                        <mat-icon matPrefix>phone</mat-icon>
+                        <mat-error *ngIf="employeeFormGroup.get('phone')?.hasError('required')">
+                            Phone is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Address</mat-label>
+                        <textarea matInput placeholder="Enter address" formControlName="address" rows="1"></textarea>
+                        <mat-icon matPrefix>location_on</mat-icon>
+                        <mat-error *ngIf="employeeFormGroup.get('address')?.hasError('required')">
+                            Address is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button type="button" (click)="cancel()" class="btn-cancel" mat-stroked-button>
+                    <mat-icon>close</mat-icon>
+                    Cancel
+                </button>
+                <button type="submit" class="btn-submit" mat-raised-button [disabled]="!employeeFormGroup.valid">
+                    <mat-icon>{{updateEmployeeId == null ? 'add' : 'save'}}</mat-icon>
+                    {{updateEmployeeId == null ? 'Create Employee' : 'Update Employee'}}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+
+mat-form-field {
+  margin-right: 12px;
+}
+
+.container div {
+  margin: 5px 10px;
+  width: 33%;
+}
+
+.mat-form-field {
+  width: 100%;
+}

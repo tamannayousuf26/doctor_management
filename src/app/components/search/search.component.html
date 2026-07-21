@@ -1,0 +1,355 @@
+<div class="card">
+  <div class="card-body">
+    <div class="page-header">
+      <div class="header-content">
+        <div class="icon-wrapper">
+          <mat-icon class="header-icon">search</mat-icon>
+        </div>
+        <div class="header-text">
+          <h4 class="page-title">Order Search</h4>
+          <p class="page-subtitle">Search and filter orders by client and date range</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="search-form-container">
+      <form [formGroup]="searchFormGroup" (ngSubmit)="onSubmit()">
+        <!-- Client and Address Row -->
+        <div class="form-row">
+          <div class="form-field client-field">
+            <label class="field-label">
+              <mat-icon class="label-icon">person</mat-icon>
+              Select Client
+            </label>
+            <app-searchable-dropdown
+              [options]="clientDropdownOptions"
+              [label]="'Choose a client'"
+              [placeholder]="'Search by name or doctor...'"
+              [appearance]="'outline'"
+              (optionSelected)="onClientSelected($event)"
+            ></app-searchable-dropdown>
+          </div>
+
+          <div class="form-field address-field">
+            <label class="field-label">
+              <mat-icon class="label-icon">location_on</mat-icon>
+              Client Address
+            </label>
+            <mat-form-field appearance="outline" class="w-100">
+              <textarea
+                matInput
+                placeholder="Address will appear here..."
+                rows="2"
+                readonly
+                class="address-textarea"
+              >{{ address }}</textarea>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Date Range Row -->
+        <div class="form-row date-row">
+          <div class="form-field">
+            <label class="field-label">
+              <mat-icon class="label-icon">event</mat-icon>
+              Start Date
+            </label>
+            <mat-form-field appearance="outline" class="date-picker-field">
+              <input
+                (focus)="picker.open()"
+                [matDatepicker]="picker"
+                formControlName="startDate"
+                matInput
+                placeholder="Select start date"
+              />
+              <mat-icon matSuffix class="calendar-icon">calendar_today</mat-icon>
+            </mat-form-field>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+
+          <div class="date-separator">
+            <mat-icon>arrow_forward</mat-icon>
+          </div>
+
+          <div class="form-field">
+            <label class="field-label">
+              <mat-icon class="label-icon">event</mat-icon>
+              End Date
+            </label>
+            <mat-form-field appearance="outline" class="date-picker-field">
+              <input
+                (focus)="picker2.open()"
+                [matDatepicker]="picker2"
+                matInput
+                placeholder="Select end date"
+                formControlName="endDate"
+              />
+              <mat-icon matSuffix class="calendar-icon">calendar_today</mat-icon>
+            </mat-form-field>
+            <mat-datepicker #picker2></mat-datepicker>
+          </div>
+        </div>
+
+        <!-- Search Button Row -->
+        <div class="button-row">
+          <button type="submit" class="search-btn" mat-raised-button [disabled]="!searchFormGroup.valid">
+            <mat-icon>search</mat-icon>
+            <span>Search Orders</span>
+          </button>
+          <button type="button" class="clear-btn" mat-stroked-button (click)="searchFormGroup.reset()">
+            <mat-icon>clear</mat-icon>
+            <span>Clear</span>
+          </button>
+          <button
+            type="button"
+            class="mark-paid-btn"
+            mat-raised-button
+            (click)="markAllAsPaid()"
+            [disabled]="!searchFormGroup.valid || itemList.length === 0"
+            matTooltip="Mark all unpaid orders in the selected date range as paid"
+          >
+            <mat-icon>check_circle</mat-icon>
+            <span>Mark All as Paid</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Results Table Card -->
+    <mat-card class="table-card" *ngIf="itemList.length != 0">
+      <mat-card-content>
+        <!-- Toolbar Section -->
+        <div class="toolbar-section">
+          <div class="title-section">
+            <h5 class="results-title">Search Results</h5>
+            <span class="order-count">{{ itemList.length }} orders</span>
+            <div class="selection-info" *ngIf="selection.selected.length > 0">
+              <mat-icon class="selection-icon">check_circle</mat-icon>
+              <span class="selection-text">
+                {{ selection.selected.length }} selected
+              </span>
+              <span class="selection-amount">
+                Total: {{ getSelectedTotal().toFixed(2) }}
+              </span>
+              <button
+                type="button"
+                class="mark-selected-paid-btn"
+                mat-raised-button
+                (click)="markSelectedAsPaid()"
+              >
+                <mat-icon>payment</mat-icon>
+                <span>Mark Selected as Paid</span>
+              </button>
+            </div>
+          </div>
+          <div class="search-box">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Filter results..."
+              (keyup)="applyFilter($event.target)"
+              class="search-input"
+            />
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="table-container">
+          <table
+            [dataSource]="dataSource"
+            class="orders-table"
+            mat-table
+            matSort
+          >
+            <!-- Checkbox Column -->
+            <ng-container matColumnDef="select">
+              <th *matHeaderCellDef mat-header-cell>
+                <mat-checkbox
+                  (change)="$event ? toggleAllRows() : null"
+                  [checked]="selection.hasValue() && isAllSelected()"
+                  [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  [aria-label]="checkboxLabel()"
+                >
+                </mat-checkbox>
+              </th>
+              <td *matCellDef="let row" mat-cell>
+                <mat-checkbox
+                  (click)="$event.stopPropagation()"
+                  (change)="$event ? selection.toggle(row) : null"
+                  [checked]="selection.isSelected(row)"
+                  [aria-label]="checkboxLabel(row)"
+                >
+                </mat-checkbox>
+              </td>
+            </ng-container>
+
+            <!-- ID Column -->
+            <ng-container matColumnDef="id">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text">{{ element["id"] }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Order No Column -->
+            <ng-container matColumnDef="order_no">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Order No
+              </th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text order-no">{{
+                  element["order_no"]
+                }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Client Name Column -->
+            <ng-container matColumnDef="client_id">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Client</th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text">{{ element["client"]["name"] }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Order Date Column -->
+            <ng-container matColumnDef="order_date">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Order Date
+              </th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text date">{{
+                  element["order_date"].substring(0, 10)
+                }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Patient Name Column -->
+            <ng-container matColumnDef="patient_name">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Patient</th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text">{{ element["patient_name"] }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Delivery Date Column -->
+            <ng-container matColumnDef="delivery_date">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Delivery
+              </th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text date">{{
+                  element["delivery_date"].substring(0, 10)
+                }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Made By Column -->
+            <ng-container matColumnDef="employee_id">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Made By</th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text">{{ element["employee"]["name"] }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Amount Column -->
+            <ng-container matColumnDef="total_amount">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>Amount</th>
+              <td *matCellDef="let element" mat-cell>
+                <span class="cell-text amount">{{
+                  element["total_amount"]
+                }}</span>
+              </td>
+            </ng-container>
+
+            <!-- Delivery Status Column -->
+            <ng-container matColumnDef="status">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Delivery Status
+              </th>
+              <td *matCellDef="let element; let i = index" mat-cell>
+                <div class="status-cell">
+                  <span
+                    class="status-badge"
+                    [ngClass]="getStatusClass(element['status'])"
+                  >
+                    {{ element["status"] }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Payment Status Column -->
+            <ng-container matColumnDef="payment_status">
+              <th *matHeaderCellDef mat-header-cell mat-sort-header>
+                Payment Status
+              </th>
+              <td *matCellDef="let element" mat-cell>
+                <div class="status-cell">
+                  <span
+                    class="status-badge"
+                    [ngClass]="getPaymentStatusClass(element['payment_status'])"
+                  >
+                    {{ element["payment_status"] }}
+                  </span>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+              <th *matHeaderCellDef mat-header-cell>Actions</th>
+              <td *matCellDef="let element" mat-cell>
+                <div class="action-buttons">
+                  <button
+                    (click)="editOrder(element['id'])"
+                    mat-icon-button
+                    class="action-btn edit-btn"
+                    [matTooltip]="'Edit Order'"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <a
+                    [href]="apiConfig.downloadPdfUrl + 'order/' + element['id']"
+                    target="_blank"
+                  >
+                    <button
+                      mat-icon-button
+                      class="action-btn print-btn"
+                      [matTooltip]="'Print Order'"
+                    >
+                      <mat-icon>print</mat-icon>
+                    </button>
+                  </a>
+                  <button
+                    (click)="deleteOrder(element['id'])"
+                    mat-icon-button
+                    class="action-btn delete-btn"
+                    [matTooltip]="'Delete Order'"
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </ng-container>
+
+            <tr
+              *matHeaderRowDef="displayedColumns; sticky: true"
+              mat-header-row
+            ></tr>
+            <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+            <!-- No Data Row -->
+            <tr class="no-data-row" *matNoDataRow>
+              <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+                <div class="no-data-content">
+                  <mat-icon>inbox</mat-icon>
+                  <span>No orders found</span>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>

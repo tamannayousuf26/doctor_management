@@ -1,0 +1,227 @@
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  color: #263238;
+}
+
+// Controls row
+.controls-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.controls-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+  }
+}
+
+.invoice-field {
+  width: 180px;
+}
+
+.bill-to-field {
+  width: 260px;
+}
+
+.date-field {
+  width: 180px;
+}
+
+// Search Box in Select
+.select-search-box {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: #fff;
+  padding: 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.searchBox {
+  width: 100%;
+
+  ::ng-deep .mat-mdc-form-field-wrapper {
+    padding-bottom: 0 !important;
+    margin: 0;
+  }
+
+  ::ng-deep .mat-mdc-text-field-wrapper {
+    padding-bottom: 0 !important;
+  }
+}
+
+.btn-add-case {
+  background-color: #258ab9 !important;
+  color: #fff !important;
+}
+
+// Scrollable cases area
+.cases-scroll {
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+// Case block
+.case-block {
+  margin-top: 16px;
+  padding: 16px 20px;
+  border: 1px solid #d6e4ed;
+  border-left: 4px solid #258ab9;
+  border-radius: 6px;
+  background: #f8fbfd;
+}
+
+.case-header {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.case-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #258ab9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 60px;
+}
+
+.case-fields {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex: 1;
+}
+
+.case-field {
+  width: 150px;
+}
+
+.patient-field {
+  width: 220px;
+}
+
+.case-actions {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.btn-add-item {
+  color: #258ab9 !important;
+  border-color: #258ab9 !important;
+  font-size: 13px;
+}
+
+.btn-remove {
+  color: #999 !important;
+
+  &:hover {
+    color: #e53935 !important;
+  }
+}
+
+// Entry table
+.entry-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background-color: #258ab9;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 10px 8px;
+    text-align: center;
+  }
+
+  td {
+    padding: 5px 4px;
+    border-bottom: 1px solid #e8eef2;
+    vertical-align: middle;
+  }
+
+  tbody tr:hover {
+    background: #eef5fa;
+  }
+}
+
+.cell-input {
+  width: 100%;
+  border: 1px solid #d6e4ed;
+  border-radius: 4px;
+  padding: 7px 10px;
+  font-size: 14px;
+  outline: none;
+  box-sizing: border-box;
+  background: #fff;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #258ab9;
+    box-shadow: 0 0 0 2px rgba(37, 138, 185, 0.1);
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.total-cell {
+  font-size: 14px;
+  font-weight: 600;
+  padding-right: 10px !important;
+  color: #263238;
+}
+
+.btn-remove-item {
+  color: #bbb !important;
+
+  &:hover {
+    color: #e53935 !important;
+  }
+}
+
+// Footer row
+.footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 2px solid #e8eef2;
+}
+
+.grand-total {
+  font-size: 17px;
+  color: #218838;
+}
+
+.btn-print {
+  background-color: #218838 !important;
+  color: #fff !important;
+  padding: 0 24px !important;
+
+  &[disabled] {
+    background-color: #ccc !important;
+    color: #888 !important;
+  }
+}

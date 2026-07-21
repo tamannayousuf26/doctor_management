@@ -1,0 +1,532 @@
+// Variables
+$primary-green: #2e7d32;
+$light-green: #4caf50;
+$pale-green: #c8e6c9;
+$dark-green: #1b5e20;
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-600: #6c757d;
+$gray-800: #343a40;
+
+// Container
+.order-create-container {
+  padding: 0;
+}
+
+// Header Section
+.header-section {
+  margin-bottom: 20px;
+
+  .title-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .back-btn {
+    color: $primary-green;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: $pale-green;
+    }
+  }
+
+  .page-title {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: $gray-800;
+  }
+}
+
+// Form Card
+.form-card {
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid $gray-200;
+
+  ::ng-deep .mat-card-content {
+    padding: 24px;
+  }
+}
+
+// Section Title
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid $pale-green;
+
+  mat-icon {
+    color: $primary-green;
+    font-size: 22px;
+    height: 22px;
+    width: 22px;
+  }
+
+  span {
+    font-size: 16px;
+    font-weight: 600;
+    color: $gray-800;
+  }
+
+  &.small {
+    margin-bottom: 12px;
+    padding-bottom: 6px;
+
+    mat-icon {
+      font-size: 18px;
+      height: 18px;
+      width: 18px;
+    }
+
+    span {
+      font-size: 14px;
+    }
+  }
+}
+
+// Form Row
+.form-row {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+
+  .form-col {
+    flex: 1;
+    min-width: 200px;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+// Search Box in Select
+.select-search-box {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: $white;
+  padding: 8px;
+  border-bottom: 1px solid $gray-200;
+}
+
+.searchBox {
+  width: 100%;
+
+  ::ng-deep .mat-form-field-wrapper {
+    padding-bottom: 0 !important;
+    margin: 0;
+  }
+
+  ::ng-deep .mat-form-field-infix {
+    padding: 8px 0 !important;
+  }
+}
+
+// Main Content Area
+.main-content {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+  }
+}
+
+// Teeth Section
+.teeth-section {
+  flex: 1.2;
+  background: $gray-100;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #e9ecef;
+}
+
+.teeth-grid-container {
+  margin-bottom: 16px;
+}
+
+.teeth-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.teeth-row {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  width: 100%;
+}
+
+.green-div {
+  background: linear-gradient(135deg, #81c784 0%, #66bb6a 100%);
+  padding: 12px 8px;
+  border-radius: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+}
+
+.tooth-num-div {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    transform: scale(1.05);
+  }
+
+  span {
+    font-size: 12px;
+    font-weight: 600;
+    color: $dark-green;
+  }
+}
+
+.own-icon {
+  font-size: 24px;
+  margin: 0 4px;
+  color: $dark-green;
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: $white;
+  }
+}
+
+// Button Groups
+.button-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+  // flex-wrap: wrap;
+  width: 100%;
+}
+
+.jaw-btn,
+.size-btn {
+  background-color: $primary-green !important;
+  color: $white !important;
+  font-weight: 500;
+  padding: 6px 16px;
+  border-radius: 6px;
+  text-transform: none;
+  transition: all 0.2s ease;
+  width: 100%;
+
+  &:hover {
+    background-color: $dark-green !important;
+    transform: translateY(-1px);
+  }
+}
+
+.size-btn {
+  background-color: $light-green !important;
+
+  &:hover {
+    background-color: $primary-green !important;
+  }
+}
+
+// Shade Row
+.shade-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  .shade-col {
+    flex: 1;
+
+    mat-form-field {
+      width: 100%;
+    }
+  }
+}
+
+// Note Section
+.note-section {
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+// Summary Section
+.summary-section {
+  flex: 1;
+  background: $white;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid $gray-200;
+  display: flex;
+  flex-direction: column;
+}
+
+// Items Table
+.items-table-container {
+  flex: 1;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  border: 1px solid $gray-200;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $gray-100;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+}
+
+.items-table {
+  width: 100%;
+
+  th.mat-header-cell {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: $white;
+    background-color: $primary-green;
+    padding: 10px 8px;
+    border: none;
+  }
+
+  td.mat-cell {
+    padding: 8px;
+    font-size: 13px;
+    border-bottom: 1px solid $gray-200;
+  }
+
+  tr.mat-row {
+    &:nth-child(even) {
+      background-color: $gray-100;
+    }
+
+    &:hover {
+      background-color: $pale-green !important;
+    }
+  }
+
+  .mat-column-itemName {
+    max-width: 120px;
+    word-wrap: break-word;
+    white-space: normal;
+  }
+
+  .mat-column-description {
+    max-width: 80px;
+  }
+
+  .mat-column-actions {
+    width: 60px;
+  }
+}
+
+.delete-item-btn {
+  width: 32px;
+  height: 32px;
+  line-height: 32px;
+
+  mat-icon {
+    font-size: 18px;
+    height: 18px;
+    width: 18px;
+  }
+}
+
+.no-data-cell {
+  padding: 24px;
+  text-align: center;
+  color: $gray-600;
+  font-style: italic;
+}
+
+// Totals Section
+.totals-section {
+  background: $gray-100;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid $gray-200;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .total-label {
+    font-size: 14px;
+    color: $gray-800;
+    width: 100%;
+  }
+
+  .total-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: $gray-800;
+
+    &.highlight {
+      color: $primary-green;
+      font-weight: 600;
+    }
+  }
+
+  &.grand-total {
+    background: $primary-green;
+    margin: 8px -12px -12px;
+    padding: 12px;
+    border-radius: 0 0 8px 8px;
+
+    .total-label,
+    .total-value {
+      color: $white;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+}
+
+.additional-input,
+.price-input {
+  border: 1px solid $gray-300;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s ease;
+
+  &:focus {
+    border-color: $primary-green;
+  }
+}
+
+.additional-input {
+  width: 90% !important;
+}
+
+.price-input {
+  width: 80px;
+  text-align: right;
+}
+
+// Action Buttons
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid $gray-200;
+}
+
+.cancel-btn {
+  background-color: $gray-200 !important;
+  color: $gray-800 !important;
+  font-weight: 500;
+  padding: 8px 32px;
+  border-radius: 8px;
+  text-transform: none;
+
+  &:hover {
+    background-color: $gray-300 !important;
+  }
+}
+
+.submit-btn {
+  background-color: $primary-green !important;
+  color: $white !important;
+  font-weight: 500;
+  padding: 8px 32px;
+  border-radius: 8px;
+  text-transform: none;
+
+  &:hover {
+    background-color: $dark-green !important;
+  }
+}
+
+// Global mat-form-field styling for this component
+::ng-deep {
+  .mat-form-field-appearance-outline .mat-form-field-outline {
+    color: $gray-300;
+  }
+
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+    color: $primary-green;
+  }
+
+  .mat-form-field-appearance-outline.mat-focused .mat-form-field-label {
+    color: $primary-green;
+  }
+
+  .mat-select-panel {
+    max-height: 300px !important;
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+
+    .form-col {
+      min-width: 100%;
+    }
+  }
+
+  .teeth-row {
+    flex-direction: column;
+  }
+
+  .button-group {
+    flex-direction: column;
+
+    .jaw-btn,
+    .size-btn {
+      width: 100%;
+    }
+  }
+
+  .shade-row {
+    flex-direction: column;
+  }
+
+  .action-buttons {
+    flex-direction: column-reverse;
+
+    .cancel-btn,
+    .submit-btn {
+      width: 100%;
+    }
+  }
+}

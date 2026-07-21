@@ -1,0 +1,218 @@
+.employee-card {
+  margin: 2rem auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  .card-header {
+    background: linear-gradient(135deg, #FB9678 0%, #E46A76 100%);
+    padding: 1.5rem 2rem;
+
+    .header-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .header-icon {
+        color: white;
+        font-size: 28px;
+        width: 28px;
+        height: 28px;
+      }
+
+      .card-title {
+        color: white;
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .card-body {
+    padding: 2rem;
+    background-color: #fafafa;
+  }
+}
+
+.photo-section {
+  margin-bottom: 2rem;
+
+  .photo-upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border-radius: 12px;
+    border: 2px dashed #e0e0e0;
+
+    .photo-preview {
+      width: 120px;
+      height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .photo-placeholder {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        width: 100%;
+        height: 100%;
+        border: 2px dashed #ccc;
+        border-radius: 50%;
+        background-color: #f5f5f5;
+        color: #999;
+
+        mat-icon {
+          font-size: 40px;
+          width: 40px;
+          height: 40px;
+        }
+
+        span {
+          font-size: 12px;
+          text-align: center;
+        }
+      }
+    }
+
+    .file-input {
+      display: none;
+    }
+
+    .upload-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #FB9678;
+      border-color: #FB9678;
+
+      &:hover {
+        background-color: rgba(251, 150, 120, 0.1);
+      }
+
+      mat-icon {
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .form-row {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+
+    &.three-columns {
+      @media (max-width: 1024px) {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+    }
+
+    mat-form-field {
+      flex: 1;
+
+      mat-icon {
+        color: #FB9678;
+      }
+    }
+  }
+}
+
+.button-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+
+  button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.5rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+
+    mat-icon {
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  .btn-cancel {
+    color: #666;
+    border-color: #ddd;
+
+    &:hover {
+      background-color: #f5f5f5;
+      border-color: #999;
+    }
+  }
+
+  .btn-submit {
+    background: linear-gradient(135deg, #FB9678 0%, #E46A76 100%);
+    color: white;
+
+    &:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(251, 150, 120, 0.4);
+    }
+
+    &:disabled {
+      background: #ccc;
+      color: #888;
+    }
+  }
+}
+
+::ng-deep {
+  .mat-mdc-form-field-subscript-wrapper {
+    height: 20px;
+  }
+
+  .mat-mdc-text-field-wrapper {
+    background-color: white !important;
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+    .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+    .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled)
+    .mdc-notched-outline__trailing {
+    border-color: #e0e0e0;
+  }
+
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover
+    .mdc-notched-outline__leading,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover
+    .mdc-notched-outline__notch,
+  .mdc-text-field--outlined:not(.mdc-text-field--disabled):hover
+    .mdc-notched-outline__trailing {
+    border-color: #FB9678;
+  }
+}

@@ -1,0 +1,111 @@
+<div class="payment-status-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <button mat-icon-button class="back-btn" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h4 class="page-title">Update Payment Status</h4>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div class="loading-container" *ngIf="isLoading">
+    <mat-spinner diameter="40"></mat-spinner>
+    <span>Loading order details...</span>
+  </div>
+
+  <!-- Main Content -->
+  <mat-card class="content-card" *ngIf="!isLoading && orderData">
+    <mat-card-content>
+      <!-- Order Summary Section -->
+      <div class="summary-section">
+        <h5 class="section-title">Order Summary</h5>
+        <div class="summary-grid">
+          <div class="summary-item">
+            <span class="label">Order No: </span>
+            <span class="value highlight">{{ orderData.order_no }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Clinic: </span>
+            <span class="value">{{ orderData.client?.name || "-" }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Doctor: </span>
+            <span class="value">{{
+              orderData.client?.doctor_name || "-"
+            }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Patient: </span>
+            <span class="value">{{ orderData.patient_name || "-" }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Order Date: </span>
+            <span class="value">{{
+              getFormattedDate(orderData.order_date)
+            }}</span>
+          </div>
+          <div class="summary-item">
+            <span class="label">Delivery Date: </span>
+            <span class="value">{{
+              getFormattedDate(orderData.delivery_date)
+            }}</span>
+          </div>
+          <div class="summary-item full-width">
+            <span class="label">Amount: </span>
+            <span class="value amount">{{ orderData.total_amount }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <mat-divider class="section-divider"></mat-divider>
+
+      <!-- Payment Status Section -->
+      <div class="status-section">
+        <h5 class="section-title">Payment Status</h5>
+        <mat-form-field appearance="outline" class="status-dropdown">
+          <mat-label>Select Payment Status</mat-label>
+          <mat-select
+            [(ngModel)]="selectedPaymentStatus"
+            (selectionChange)="onChangePaymentStatus($event.value)"
+          >
+            <mat-option
+              *ngFor="let item of paymentStatusOptions"
+              [value]="item.statusId"
+            >
+              {{ item.statusName }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-section">
+        <button
+          mat-raised-button
+          color="primary"
+          class="submit-btn"
+          (click)="onSubmit()"
+        >
+          <mat-icon>check</mat-icon>
+          Update Status
+        </button>
+        <button mat-raised-button class="cancel-btn" (click)="cancel()">
+          <mat-icon>close</mat-icon>
+          Cancel
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- No Data State -->
+  <div class="no-data-container" *ngIf="!isLoading && !orderData">
+    <mat-icon>error_outline</mat-icon>
+    <span>Order not found</span>
+    <button mat-raised-button color="primary" (click)="goBack()">
+      Go Back
+    </button>
+  </div>
+</div>

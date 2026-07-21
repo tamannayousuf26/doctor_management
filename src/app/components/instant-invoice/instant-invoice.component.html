@@ -1,0 +1,174 @@
+<mat-card class="w-100">
+  <mat-card-content>
+    <!-- Title row -->
+    <span class="title">Instant Invoice</span>
+
+    <!-- Controls row: Invoice No, Bill To, Add Case -->
+    <div class="controls-row">
+      <div class="controls-left">
+        <mat-form-field appearance="outline" class="invoice-field">
+          <mat-label>Invoice No</mat-label>
+          <input
+            matInput
+            [(ngModel)]="invoiceNumber"
+            placeholder="e.g. INV-001"
+          />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="bill-to-field">
+          <mat-label>Bill To</mat-label>
+          <mat-select
+            [(ngModel)]="selectedClientId"
+            (selectionChange)="onChangeClientOption($event.value)"
+            (openedChange)="$event ? null : clearClientSearch()"
+          >
+            <div class="select-search-box">
+              <mat-form-field class="searchBox" appearance="outline">
+                <mat-icon matPrefix>search</mat-icon>
+                <input
+                  matInput
+                  placeholder="Search client..."
+                  autocomplete="off"
+                  [(ngModel)]="clientFilterText"
+                  [ngModelOptions]="{ standalone: true }"
+                  (keyup)="applyClientSearch($event)"
+                  (keydown)="$event.stopPropagation()"
+                />
+              </mat-form-field>
+            </div>
+            <mat-option
+              *ngFor="let item of filteredClientList"
+              [value]="item['id']"
+            >
+              {{ item["name"] }}&nbsp;&nbsp;({{ item["doctor_name"] }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="date-field" (click)="datePicker.open()">
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            [matDatepicker]="datePicker"
+            [(ngModel)]="invoiceDate"
+            readonly
+          />
+          <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+          <mat-datepicker #datePicker></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <button mat-raised-button class="btn-add-case" (click)="addCase()">
+        <mat-icon>add</mat-icon>
+        Add Case
+      </button>
+    </div>
+
+    <!-- Cases (scrollable area) -->
+    <div class="cases-scroll">
+      <div *ngFor="let c of cases; let ci = index" class="case-block">
+        <div class="case-header">
+          <div class="case-label">Case {{ ci + 1 }}</div>
+          <div class="case-fields">
+            <mat-form-field appearance="outline" class="case-field">
+              <mat-label>Case No</mat-label>
+              <input matInput [(ngModel)]="c.caseNo" />
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              class="case-field patient-field"
+            >
+              <mat-label>Patient Name</mat-label>
+              <input matInput [(ngModel)]="c.patientName" />
+            </mat-form-field>
+          </div>
+          <div class="case-actions">
+            <button
+              mat-stroked-button
+              class="btn-add-item"
+              (click)="addItem(ci)"
+            >
+              <mat-icon>add</mat-icon> Add Item
+            </button>
+            <button
+              mat-icon-button
+              class="btn-remove"
+              (click)="removeCase(ci)"
+              *ngIf="cases.length > 1"
+            >
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        </div>
+
+        <table class="entry-table">
+          <thead>
+            <tr>
+              <th>Description</th>
+              <th style="width: 90px">Qty</th>
+              <th style="width: 120px">Unit Price</th>
+              <th style="width: 130px">Total</th>
+              <th style="width: 44px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of c.items; let ii = index">
+              <td>
+                <input
+                  type="text"
+                  [(ngModel)]="item.description"
+                  class="cell-input"
+                  placeholder="Enter description"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  [(ngModel)]="item.quantity"
+                  (ngModelChange)="calculateRowTotal(item)"
+                  class="cell-input text-center"
+                  min="0"
+                />
+              </td>
+              <td>
+                <input
+                  type="number"
+                  [(ngModel)]="item.unitPrice"
+                  (ngModelChange)="calculateRowTotal(item)"
+                  class="cell-input text-right"
+                  min="0"
+                />
+              </td>
+              <td class="text-right total-cell">
+                {{ item.totalPrice | number : "1.2-2" }}
+              </td>
+              <td class="text-center">
+                <button
+                  mat-icon-button
+                  class="btn-remove-item"
+                  (click)="removeItem(ci, ii)"
+                  *ngIf="c.items.length > 1"
+                >
+                  <mat-icon>close</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Footer: Grand total + Print -->
+    <div class="footer-row">
+      <span class="grand-total"
+        >Grand Total (RM): <b>{{ grandTotal | number : "1.2-2" }}</b></span
+      >
+      <button
+        mat-raised-button
+        class="btn-print"
+        (click)="print()"
+        [disabled]="!isFormValid()"
+      >
+        <mat-icon>print</mat-icon>
+        Print Invoice
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

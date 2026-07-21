@@ -1,0 +1,168 @@
+<!--@ts-nocheck-->
+<div class="client-list-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <h4 class="page-title">Client List</h4>
+      <span class="client-count" *ngIf="clientList?.length">{{ clientList.length }} clients</span>
+    </div>
+  </div>
+
+  <!-- Card Container -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- Toolbar Section -->
+      <div class="toolbar-section">
+        <div class="filter-group">
+          <div class="search-box">
+            <mat-icon class="search-icon">search</mat-icon>
+            <input
+              type="text"
+              placeholder="Search clients by name, doctor, phone, address..."
+              (input)="applyFilter($event.target)"
+              class="search-input"
+            />
+          </div>
+          <mat-form-field appearance="outline" class="status-filter">
+            <mat-label>Status</mat-label>
+            <mat-select [(value)]="selectedStatus" (selectionChange)="onStatusFilterChange($event.value)">
+              <mat-option value="all">All</mat-option>
+              <mat-option value="active">Active</mat-option>
+              <mat-option value="inactive">Inactive</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="create-btn"
+          (click)="createClient()"
+        >
+          <mat-icon>add</mat-icon>
+          Create Client
+        </button>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-container">
+        <table [dataSource]="dataSource" class="clients-table" mat-table matSort>
+          <!-- Client ID Column -->
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Client ID</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text client-no">{{ element['client_no'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Client Name</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['name'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Doctor Name Column -->
+          <ng-container matColumnDef="doctor_name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Doctor Name</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['doctor_name'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Due Column -->
+          <ng-container matColumnDef="due">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Due</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text amount due">{{ element['due'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Advance Column -->
+          <ng-container matColumnDef="advance">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Advance</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text amount advance">{{ element['advance'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Phone Column -->
+          <ng-container matColumnDef="phone">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Phone</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['phone'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Address Column -->
+          <ng-container matColumnDef="address">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Address</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['address'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Status</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="status-cell">
+                <span class="status-badge" [ngClass]="getStatusClass(element['status'])">
+                  {{ getStatusText(element['status']) }}
+                </span>
+                <button
+                  mat-icon-button
+                  class="status-edit-btn"
+                  (click)="changeClientStatus(element)"
+                  [matTooltip]="'Change Status'"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell>Actions</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="action-buttons">
+                <button
+                  (click)="editClient(element['id'])"
+                  mat-icon-button
+                  class="action-btn edit-btn"
+                  [matTooltip]="'Edit Client'"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+          <!-- No Data Row -->
+          <tr class="no-data-row" *matNoDataRow>
+            <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+              <div class="no-data-content">
+                <mat-icon>inbox</mat-icon>
+                <span>No clients found</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Paginator -->
+      <mat-paginator
+        [length]="clientList.length"
+        [pageSize]="100"
+        [hidePageSize]="true"
+        aria-label="Select page"
+        class="table-paginator"
+      >
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

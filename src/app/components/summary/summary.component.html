@@ -1,0 +1,110 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="mb-32 title">{{ title }}</h4>
+    <div>
+      <form [formGroup]="summaryFormGroup">
+        <div
+          class="container"
+          *ngIf="params == 'work-status' || params == 'work'"
+        >
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Choose an option</mat-label>
+              <mat-select
+                formControlName="id"
+                (selectionChange)="onChangeClientOption($event.value)"
+              >
+                <div>
+                  <mat-form-field class="searchBox" appearance="outline">
+                    <input
+                      #SearchInput
+                      matInput
+                      placeholder="Search..."
+                      autocomplete="off"
+                      placeholder="Search..."
+                      autocomplete="off"
+                      (keyup)="applySearch($event)"
+                      appInputFocus
+                    />
+                  </mat-form-field>
+                  <mat-option
+                    *ngFor="let item of filteredData"
+                    [value]="item['id']"
+                    >{{ item["name"] }}&nbsp;&nbsp;({{ item["doctor_name"] }})
+                  </mat-option>
+                </div>
+                <!-- <mat-option *ngFor="let item of clientList" [value]="item['id']"
+                  >{{ item["name"] }}&nbsp;&nbsp;({{ item["doctor_name"] }})
+                </mat-option> -->
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div>
+            <mat-form-field appearance="fill" class="w-100 fs-16">
+              <mat-label>Textarea</mat-label>
+              <textarea matInput placeholder="Address" rows="2">{{
+                address
+              }}</textarea>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="container">
+          <div>
+            <mat-form-field appearance="outline">
+              <input
+                (focus)="picker.open()"
+                [matDatepicker]="picker"
+                formControlName="startDate"
+                (ngModelChange)="onStartDateChange()"
+                matInput
+                placeholder="Start Date"
+              />
+              <mat-icon matSuffix>today</mat-icon>
+              <mat-hint>DD/MM/YYYY</mat-hint>
+            </mat-form-field>
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+          <div>
+            <mat-form-field appearance="outline">
+              <input
+                (focus)="picker2.open()"
+                [matDatepicker]="picker2"
+                matInput
+                placeholder="End Date"
+                (ngModelChange)="onEndDateChange()"
+                formControlName="endDate"
+              />
+              <mat-icon matSuffix>today</mat-icon>
+              <mat-hint>DD/MM/YYYY</mat-hint>
+            </mat-form-field>
+            <mat-datepicker #picker2></mat-datepicker>
+          </div>
+        </div>
+
+        <div class="container">
+          <div>
+            <a
+              mat-raised-butto
+              class="submit"
+              [href]="
+                params == 'work-status'
+                  ? workStatusHref
+                  : params == 'work'
+                  ? workHref
+                  : params == 'all-work-status'
+                  ? allWorkStatusHref
+                  : params == 'all-delivered-work-status'
+                  ? allDeliveredWorkStatusHref
+                  : params == 'all-clinic-work-status'
+                  ? allClinicStatusHref
+                  : allRedoWorkStatusHref
+              "
+            >
+              Submit
+            </a>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

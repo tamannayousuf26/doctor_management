@@ -1,0 +1,109 @@
+<mat-card class="w-100">
+  <mat-card-content>
+    <mat-grid-list cols="4" rowHeight="40px">
+      <mat-grid-tile colspan="3">
+        <span class="title">Incomes List</span>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1">
+        <a
+          href="/income/create"
+          class="create-button-on-list-page"
+          color="info"
+          mat-raised-button
+          >Create Income
+        </a>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-form-field appearance="fill">
+      <mat-label>Search</mat-label>
+      <input (keyup)="applyFilter($event.target)" matInput />
+    </mat-form-field>
+    <div class="table-responsive">
+      <table
+        [dataSource]="dataSource"
+        class="text-nowrap w-100"
+        mat-table
+        matSort
+      >
+        <ng-container matColumnDef="id">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+          <td *matCellDef="let element" class="fw-medium" mat-cell>
+            {{ element["id"] }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="payment_date">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>
+            Payment Date
+          </th>
+          <td *matCellDef="let element" mat-cell>
+            <p class="mb-0 fw-medium">
+              {{ element["payment_date"].substring(0, 10) }}
+            </p>
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="remarks">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Remarks</th>
+          <td *matCellDef="let element" class="fw-medium" mat-cell>
+            {{ element["remarks"] }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="type">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Payment</th>
+          <td *matCellDef="let element" class="fw-medium" mat-cell>
+            <span
+              class="badge {{
+                element['type'] == 0 ? 'badge-success' : 'badge-primary'
+              }} rounded-pill"
+              >{{ element["type"] == 0 ? "Paid" : "Due" }}</span
+            >
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="total_amount">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Amount</th>
+          <td *matCellDef="let element" class="fw-medium" mat-cell>
+            {{ element["total_amount"] }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="employee_id">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Made By</th>
+          <td *matCellDef="let element" class="fw-medium" mat-cell>
+            {{ element["employee"]["name"] }}
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="client_id">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Bill To</th>
+          <td *matCellDef="let element" class="fw-medium" mat-cell>
+            {{ element["client"]["name"] }} ({{
+              element["client"]["doctor_name"]
+            }})
+          </td>
+        </ng-container>
+        <ng-container matColumnDef="actions">
+          <th *matHeaderCellDef mat-header-cell mat-sort-header>Actions</th>
+          <td
+            *matCellDef="let element; let i = index"
+            class="fw-medium"
+            mat-cell
+          >
+            <button
+              (click)="editIncome(element['id'])"
+              color="primary"
+              mat-icon-button
+            >
+              <mat-icon aria-label="icon-button">edit_square</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+        <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+        <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+      </table>
+      <mat-paginator
+        [length]="itemList.length"
+        [pageSizeOptions]="[10, 30, 60, 100]"
+        [pageSize]="10"
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+  </mat-card-content>
+</mat-card>

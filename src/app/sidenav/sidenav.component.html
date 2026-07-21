@@ -1,0 +1,116 @@
+<div>
+  <div [ngClass]="collapsed ? 'sidenav-collapsed' : ''" class="sidenav">
+    <div class="logo-container">
+      <img
+        (click)="toggleCollapse()"
+        alt=""
+        class="rounded-circle"
+        src="assets/images/logo.jpg"
+        style="width: 50px; height: 50px"
+      />
+
+      <div *ngIf="collapsed" class="logo-text">Vivadent</div>
+      <button (click)="closeSidenav()" *ngIf="collapsed" class="btn-close">
+        <i class="fal fa-times close-icon"></i>
+      </button>
+    </div>
+
+    <mat-tree
+      [dataSource]="dataSource"
+      [treeControl]="treeControl"
+      class="sidenav-nav"
+      style="background-color: #263238"
+      multiTemplateDataRows="false"
+    >
+      <!-- This is the tree node template for leaf nodes -->
+      <div>
+        <mat-tree-node
+          *matTreeNodeDef="let node"
+          class="sidenav-nav-item"
+          style="color: #f3f3f3; text-decoration: none"
+        >
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <a
+            [routerLinkActiveOptions]="{ exact: true }"
+            class="exc"
+            routerLink="{{ node.routerLink }}"
+            routerLinkActive="active"
+          >
+            <mat-icon
+              [matTooltip]="node.name"
+              matTooltipPosition="after"
+              class="own-icon"
+              >{{ node.icon }}</mat-icon
+            >
+            <span *ngIf="collapsed" class="own-text">{{ node.name }}</span>
+          </a>
+        </mat-tree-node>
+      </div>
+      <!-- This is the tree node template for expandable nodes   -->
+      <mat-tree-node
+        *matTreeNodeDef="let node; when: hasChild"
+        class="sidenav-nav-item"
+        style="color: #f3f3f3; text-decoration: none"
+      >
+        <a
+          style="position: relative"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="exc"
+          matTreeNodeToggle
+          routerLinkActive="active"
+        >
+          <mat-icon
+            [matTooltip]="node.name"
+            matTooltipPosition="after"
+            class="own-icon"
+            >{{ node.icon }}</mat-icon
+          >
+          <mat-icon
+            style="position: absolute; right: 1px"
+            *ngIf="collapsed"
+            class="mat-icon-rtl-mirror"
+          >
+            {{ treeControl.isExpanded(node) ? "expand_less" : "expand_more" }}
+          </mat-icon>
+          <span *ngIf="collapsed" class="own-text">{{ node.name }}</span>
+        </a>
+      </mat-tree-node>
+    </mat-tree>
+  </div>
+
+  <!-- Header Toolbar -->
+  <mat-toolbar class="header ps-24 pe-24">
+    <div class="ms-auto">
+      <button
+        [matMenuTriggerFor]="menu"
+        class="fs-16 pt-4 pb-4 ps-8 pe-8 text-light-muted"
+        mat-button
+      >
+        <img
+          alt=""
+          class="rounded-circle"
+          src="assets/images/logo.jpg"
+          style="width: 40px; height: 40px"
+        />
+        <span class="fw-light ms-8 text-secondary">Hi,</span>
+        <span class="fw-bold ms-8">{{ currentUser["name"] }}</span>
+        <i-feather class="feather-base mt-n2" name="chevron-down"></i-feather>
+      </button>
+      <mat-menu #menu="matMenu" class="profile-dropdown">
+        <button (click)="onClickSettings()" mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>My Settings</span>
+        </button>
+        <!-- <button mat-menu-item>
+          <mat-icon>help_outline</mat-icon>
+          <span>Help & Support</span>
+        </button> -->
+        <mat-divider></mat-divider>
+        <button (click)="logout()" mat-menu-item class="logout-btn">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </mat-toolbar>
+</div>

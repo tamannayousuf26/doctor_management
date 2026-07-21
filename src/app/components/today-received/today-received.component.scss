@@ -1,0 +1,27 @@
+.mat-row:nth-child(even) {
+  background-color: #DFF6FF;
+  //text-align: center;
+}
+
+.mat-row:nth-child(odd) {
+  background-color: white;
+  //text-align: center;
+}
+
+th {
+  font-size: 8pt;
+  text-transform: uppercase;
+  color: #fff;
+  background-color: #005087;
+  //text-align: center;
+}
+
+.title {
+  left: 5px;
+  padding: 0px 10px 20px 0px;
+  text-align: left;
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: grey;
+
+}

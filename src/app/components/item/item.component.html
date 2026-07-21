@@ -1,0 +1,44 @@
+<div class="card item-card">
+    <div class="card-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">{{updateItemId == null ? 'add_circle' : 'edit'}}</mat-icon>
+            <h4 class="card-title">{{updateItemId == null ? 'Create New Item' : 'Update Item'}}</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="itemFormGroup" (ngSubmit)="onSubmit()">
+            <div class="form-section">
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Item Name</mat-label>
+                        <input matInput placeholder="Enter item name" formControlName="name" type="text">
+                        <mat-icon matPrefix>inventory_2</mat-icon>
+                        <mat-error *ngIf="itemFormGroup.get('name')?.hasError('required')">
+                            Name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div class="form-row">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Price</mat-label>
+                        <input matInput placeholder="Enter price" formControlName="price" type="number">
+                        <mat-icon matPrefix>attach_money</mat-icon>
+                        <mat-error *ngIf="itemFormGroup.get('price')?.hasError('required')">
+                            Price is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="button-row">
+                <button type="button" (click)="cancel()" class="btn-cancel" mat-stroked-button>
+                    <mat-icon>close</mat-icon>
+                    Cancel
+                </button>
+                <button type="submit" class="btn-submit" mat-raised-button [disabled]="!itemFormGroup.valid">
+                    <mat-icon>{{updateItemId == null ? 'add' : 'save'}}</mat-icon>
+                    {{updateItemId == null ? 'Create Item' : 'Update Item'}}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

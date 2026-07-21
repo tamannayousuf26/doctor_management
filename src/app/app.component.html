@@ -1,0 +1,11 @@
+<div *ngIf="isLandingPage else angular">
+    <app-landing-page></app-landing-page>
+</div>
+<ng-template #angular>
+    <app-sidenav *ngIf="!isLoginPage" (onToggleSideNav)="onToggleSideNav($event)">
+    </app-sidenav>
+    <app-body
+            [collapsed]="isSideNavCollapsed"
+            [screenWidth]="screenWidth"
+    ></app-body>
+</ng-template>

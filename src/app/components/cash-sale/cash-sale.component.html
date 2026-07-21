@@ -1,0 +1,97 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Cash Sale</h4>
+    <hr />
+    <form [formGroup]="cashSaleForm">
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label class="form-label">Date: <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input
+              matInput
+              formControlName="date"
+              (focus)="picker.open()"
+              [matDatepicker]="picker"
+              placeholder="Select Date"
+              class="form-input"
+              readonly
+            />
+            <mat-datepicker #picker></mat-datepicker>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label class="form-label">Particular: <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input
+              formControlName="particular"
+              placeholder="Enter Particular"
+              type="text"
+              class="form-input"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row two-col">
+        <div class="form-group">
+          <label class="form-label">Bank / Cash: <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <select formControlName="paymentMethod" class="form-input form-select">
+              <option *ngFor="let method of paymentMethods" [value]="method.value">
+                {{ method.label }}
+              </option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount: <span class="required">*</span></label>
+          <div class="input-wrapper">
+            <input
+              formControlName="amount"
+              placeholder="0.00"
+              type="number"
+              step="0.01"
+              class="form-input"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group full-width">
+          <label class="form-label">Reference:</label>
+          <div class="input-wrapper">
+            <textarea
+              formControlName="reference"
+              placeholder="Add notes or reference"
+              rows="3"
+              class="form-input form-textarea"
+            ></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="button-row">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          (click)="onSubmit()"
+          [disabled]="!cashSaleForm.valid"
+        >
+          <mat-icon>print</mat-icon>
+          Print
+        </button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          (click)="clearForm()"
+        >
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

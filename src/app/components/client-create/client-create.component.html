@@ -1,0 +1,64 @@
+<div class="card client-card">
+    <div class="card-header">
+        <div class="header-content">
+            <mat-icon class="header-icon">{{updateClientId == null ? 'person_add' : 'edit'}}</mat-icon>
+            <h4 class="card-title">{{updateClientId == null ? 'Create New Client' : 'Update Client'}}</h4>
+        </div>
+    </div>
+    <div class="card-body">
+        <form [formGroup]="clientFormGroup" (ngSubmit)="onSubmit()">
+            <div class="form-section">
+                <div class="form-row two-columns">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Client Name</mat-label>
+                        <input matInput placeholder="Enter client name" formControlName="name" type="text">
+                        <mat-icon matPrefix>person</mat-icon>
+                        <mat-error *ngIf="clientFormGroup.get('name')?.hasError('required')">
+                            Name is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Doctor Name</mat-label>
+                        <input matInput placeholder="Enter doctor name" formControlName="doctor_name" type="text">
+                        <mat-icon matPrefix>medical_services</mat-icon>
+                        <mat-error *ngIf="clientFormGroup.get('doctor_name')?.hasError('required')">
+                            Doctor name is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+
+                <div class="form-row two-columns">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Phone</mat-label>
+                        <input matInput placeholder="Enter phone number" formControlName="phone" type="tel">
+                        <mat-icon matPrefix>phone</mat-icon>
+                        <mat-error *ngIf="clientFormGroup.get('phone')?.hasError('required')">
+                            Phone is required
+                        </mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Address</mat-label>
+                        <textarea matInput placeholder="Enter address" formControlName="address" rows="1"></textarea>
+                        <mat-icon matPrefix>location_on</mat-icon>
+                        <mat-error *ngIf="clientFormGroup.get('address')?.hasError('required')">
+                            Address is required
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <div class="button-row">
+                <button type="button" (click)="cancel()" class="btn-cancel" mat-stroked-button>
+                    <mat-icon>close</mat-icon>
+                    Cancel
+                </button>
+                <button type="submit" class="btn-submit" mat-raised-button [disabled]="!clientFormGroup.valid">
+                    <mat-icon>{{updateClientId == null ? 'add' : 'save'}}</mat-icon>
+                    {{updateClientId == null ? 'Create Client' : 'Update Client'}}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

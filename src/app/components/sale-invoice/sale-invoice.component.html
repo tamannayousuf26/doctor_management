@@ -1,0 +1,381 @@
+<!--@ts-nocheck-->
+<div class="sale-invoice-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <h4 class="page-title">Sale Invoices</h4>
+      <span class="order-count" *ngIf="orders?.length"
+        >{{ orders.length }} orders</span
+      >
+    </div>
+  </div>
+
+  <!-- Filters Card -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters-row">
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Year</mat-label>
+          <mat-select
+            [(ngModel)]="selectedYear"
+            (selectionChange)="onFilterChange()"
+          >
+            <mat-option *ngFor="let year of years" [value]="year">{{
+              year
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Month</mat-label>
+          <mat-select
+            [(ngModel)]="selectedMonth"
+            (selectionChange)="onFilterChange()"
+          >
+            <mat-option [value]="null">All Months</mat-option>
+            <mat-option *ngFor="let month of months" [value]="month.value">{{
+              month.label
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Date</mat-label>
+          <mat-select
+            [(ngModel)]="selectedDate"
+            (selectionChange)="onFilterChange()"
+          >
+            <mat-option [value]="null">All Days</mat-option>
+            <mat-option *ngFor="let date of dates" [value]="date">{{
+              date
+            }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filter-field">
+          <mat-label>Payment Status</mat-label>
+          <mat-select
+            [(ngModel)]="selectedPaymentStatus"
+            (selectionChange)="onFilterChange()"
+          >
+            <mat-option
+              *ngFor="let status of paymentStatuses"
+              [value]="status.value"
+              >{{ status.label }}</mat-option
+            >
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field
+          appearance="outline"
+          class="filter-field filter-field-wide"
+        >
+          <mat-label>Search</mat-label>
+          <input
+            matInput
+            [(ngModel)]="searchText"
+            (ngModelChange)="onFilterChange()"
+            placeholder="Search by client, patient, order no..."
+            type="text"
+          />
+        </mat-form-field>
+
+        <button
+          mat-stroked-button
+          color="warn"
+          class="clear-btn"
+          (click)="clearFilters()"
+        >
+          <mat-icon>clear</mat-icon>
+          Clear
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Summary Cards -->
+  <div class="summary-section">
+    <div class="summary-cards">
+      <div class="summary-card">
+        <div class="summary-icon amount">
+          <mat-icon>payments</mat-icon>
+        </div>
+        <div class="summary-content">
+          <div class="summary-label">Total</div>
+          <div class="summary-value">
+            {{ formatCurrency(summary.total_amount) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon paid">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <div class="summary-content">
+          <div class="summary-label">Paid</div>
+          <div class="summary-value success">
+            {{ formatCurrency(summary.total_paid) }}
+          </div>
+        </div>
+      </div>
+
+      <div class="summary-card">
+        <div class="summary-icon unpaid">
+          <mat-icon>pending</mat-icon>
+        </div>
+        <div class="summary-content">
+          <div class="summary-label">Unpaid</div>
+          <div class="summary-value danger">
+            {{ formatCurrency(summary.total_unpaid) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary-actions">
+      <button
+        mat-raised-button
+        color="primary"
+        class="summary-action-btn"
+        (click)="printReport()"
+      >
+        <mat-icon>print</mat-icon>
+        Print
+      </button>
+      <button
+        mat-raised-button
+        color="accent"
+        class="summary-action-btn"
+        (click)="shareReport()"
+      >
+        <mat-icon>share</mat-icon>
+        Share
+      </button>
+    </div>
+  </div>
+
+  <!-- Table Card -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- Loading State -->
+      <div class="loading-state" *ngIf="loading">
+        <mat-spinner diameter="40"></mat-spinner>
+        <p>Loading sale invoices...</p>
+      </div>
+
+      <!-- Selection Info Bar -->
+      <div class="selection-info-bar" *ngIf="selection.selected.length > 0">
+        <div class="selection-info">
+          <div class="selection-count-wrapper">
+            <span class="count-number">{{ selection.selected.length }}</span>
+            <span class="count-label">selected</span>
+          </div>
+          <div class="selection-amount-wrapper">
+            <span class="amount-label">Total</span>
+            <span class="amount-value"
+              >RM {{ getSelectedTotal().toFixed(2) }}</span
+            >
+          </div>
+        </div>
+        <div class="selection-actions">
+          <button class="btn-clear" (click)="selection.clear()">
+            <mat-icon>close</mat-icon>
+            Clear
+          </button>
+          <button class="btn-mark-paid" (click)="markSelectedAsPaid()">
+            <mat-icon>check</mat-icon>
+            Mark as Paid
+          </button>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-container" *ngIf="!loading">
+        <table [dataSource]="orders" class="orders-table" mat-table matSort>
+          <!-- Checkbox Column -->
+          <ng-container matColumnDef="select">
+            <th *matHeaderCellDef mat-header-cell>
+              <mat-checkbox
+                (change)="$event ? toggleAllRows() : null"
+                [checked]="selection.hasValue() && isAllSelected()"
+                [indeterminate]="selection.hasValue() && !isAllSelected()"
+                [aria-label]="checkboxLabel()"
+              >
+              </mat-checkbox>
+            </th>
+            <td *matCellDef="let row" mat-cell>
+              <mat-checkbox
+                (click)="$event.stopPropagation()"
+                (change)="$event ? selection.toggle(row) : null"
+                [checked]="selection.isSelected(row)"
+                [aria-label]="checkboxLabel(row)"
+              >
+              </mat-checkbox>
+            </td>
+          </ng-container>
+
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["id"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Order No Column -->
+          <ng-container matColumnDef="order_no">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Order No</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text order-no">{{ element["order_no"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Client Name Column -->
+          <ng-container matColumnDef="client">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Client</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["client"]["name"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Doctor Name Column -->
+          <ng-container matColumnDef="doctor">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Doctor</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{
+                element["client"]["doctor_name"]
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="order_date">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              Order Date
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text date">{{
+                formatDate(element["order_date"])
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Patient Name Column -->
+          <ng-container matColumnDef="patient_name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Patient</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["patient_name"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Delivery Date Column -->
+          <ng-container matColumnDef="delivery_date">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Delivery</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text date">{{
+                formatDate(element["delivery_date"])
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Amount Column -->
+          <ng-container matColumnDef="total_amount">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Amount</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text amount">{{
+                formatCurrency(element["total_amount"])
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Payment Status Column -->
+          <ng-container matColumnDef="payment_status">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              Payment Status
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="status-cell">
+                <span
+                  class="status-badge"
+                  [ngClass]="getPaymentStatusClass(element['payment_status'])"
+                >
+                  {{ getPaymentStatusLabel(element["payment_status"]) }}
+                </span>
+                <button
+                  mat-icon-button
+                  class="status-edit-btn"
+                  (click)="changePaymentStatus(element['id'])"
+                  [matTooltip]="'Change Payment Status'"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell>Actions</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="action-buttons">
+                <button
+                  (click)="editOrder(element['id'])"
+                  mat-icon-button
+                  class="action-btn edit-btn"
+                  [matTooltip]="'Edit Order'"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <a
+                  [href]="apiConfig.downloadPdfUrl + 'order/' + element['id']"
+                  target="_blank"
+                >
+                  <button
+                    mat-icon-button
+                    class="action-btn print-btn"
+                    [matTooltip]="'Print Order'"
+                  >
+                    <mat-icon>print</mat-icon>
+                  </button>
+                </a>
+                <!-- <button
+                  (click)="deliverOrder(element['id'])"
+                  mat-icon-button
+                  class="action-btn deliver-btn"
+                  [matTooltip]="'Mark as Delivered'"
+                >
+                  <mat-icon>task</mat-icon>
+                </button> -->
+                <button
+                  (click)="deleteOrder(element['id'])"
+                  mat-icon-button
+                  class="action-btn delete-btn"
+                  [matTooltip]="'Delete Order'"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr
+            *matHeaderRowDef="displayedColumns; sticky: true"
+            mat-header-row
+          ></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+          <!-- No Data Row -->
+          <tr class="no-data-row" *matNoDataRow>
+            <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+              <div class="no-data-content">
+                <mat-icon>inbox</mat-icon>
+                <span>No invoices found</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

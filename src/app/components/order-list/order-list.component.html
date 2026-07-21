@@ -1,0 +1,247 @@
+<!--@ts-nocheck-->
+<div class="order-list-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <h4 class="page-title">Orders List</h4>
+      <span class="order-count" *ngIf="itemList?.length"
+        >{{ itemList.length }} orders</span
+      >
+    </div>
+  </div>
+
+  <!-- Card Container -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- Toolbar Section -->
+      <div class="toolbar-section">
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            #searchInput
+            type="text"
+            placeholder="Search orders by order no, client, patient..."
+            (input)="onSearchInput($event)"
+            [(ngModel)]="searchKey"
+            class="search-input"
+          />
+          <mat-icon *ngIf="searchKey" class="clear-icon" (click)="clearSearch()"
+            >close</mat-icon
+          >
+        </div>
+        <button
+          mat-raised-button
+          color="primary"
+          class="create-btn"
+          (click)="createOrder()"
+        >
+          <mat-icon>add</mat-icon>
+          Create Order
+        </button>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-container">
+        <table [dataSource]="dataSource" class="orders-table" mat-table matSort>
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["id"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Order No Column -->
+          <ng-container matColumnDef="order_no">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Order No</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text order-no">{{ element["order_no"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Client Name Column -->
+          <ng-container matColumnDef="client_id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Client</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["client"]["name"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Doctor Name Column -->
+          <ng-container matColumnDef="doctor_name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Doctor</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{
+                element["client"]["doctor_name"]
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="order_date">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              Order Date
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text date">{{
+                element["order_date"].substring(0, 10)
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Patient Name Column -->
+          <ng-container matColumnDef="patient_name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Patient</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["patient_name"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Delivery Date Column -->
+          <ng-container matColumnDef="delivery_date">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Delivery</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text date">{{
+                element["delivery_date"].substring(0, 10)
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Made By Column -->
+          <ng-container matColumnDef="employee_id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Made By</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element["employee"]["name"] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Amount Column -->
+          <ng-container matColumnDef="total_amount">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Amount</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text amount">{{
+                element["total_amount"]
+              }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Delivery Status Column -->
+          <ng-container matColumnDef="status">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              Delivery Status
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <span
+                class="status-badge"
+                [ngClass]="getStatusClass(element['status'])"
+              >
+                {{ element["status"] }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Payment Status Column -->
+          <ng-container matColumnDef="payment_status">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>
+              Payment Status
+            </th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="status-cell">
+                <span
+                  class="status-badge"
+                  [ngClass]="getPaymentStatusClass(element['payment_status'])"
+                >
+                  {{ element["payment_status"] }}
+                </span>
+                <button
+                  mat-icon-button
+                  class="status-edit-btn"
+                  (click)="changePaymentStatus(element['id'])"
+                  [matTooltip]="'Change Payment Status'"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell>Actions</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="action-buttons">
+                <button
+                  (click)="editOrder(element['id'])"
+                  mat-icon-button
+                  class="action-btn edit-btn"
+                  [matTooltip]="'Edit Order'"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <a
+                  [href]="apiConfig.downloadPdfUrl + 'order/' + element['id']"
+                  target="_blank"
+                >
+                  <button
+                    mat-icon-button
+                    class="action-btn print-btn"
+                    [matTooltip]="'Print Order'"
+                  >
+                    <mat-icon>print</mat-icon>
+                  </button>
+                </a>
+                <button
+                  (click)="deliverOrder(element['id'])"
+                  mat-icon-button
+                  class="action-btn deliver-btn"
+                  [matTooltip]="'Mark as Delivered'"
+                >
+                  <mat-icon>task</mat-icon>
+                </button>
+                <button
+                  (click)="deleteOrder(element['id'])"
+                  mat-icon-button
+                  class="action-btn delete-btn"
+                  [matTooltip]="'Delete Order'"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr
+            *matHeaderRowDef="displayedColumns; sticky: true"
+            mat-header-row
+          ></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+          <!-- No Data Row -->
+          <tr class="no-data-row" *matNoDataRow>
+            <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+              <div class="no-data-content">
+                <mat-icon>inbox</mat-icon>
+                <span>No orders found</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Pagination -->
+  <div class="pagination-section" *ngIf="showPagination">
+    <app-pagination
+      [first]="first"
+      [last]="last"
+      [current]="current"
+      (nextBtn)="nextBtnClick()"
+      (prevBtn)="prevBtnClick()"
+      (numberBtn)="numberBtnClick($event)"
+    ></app-pagination>
+  </div>
+</div>
+
+<!-- Search Section (kept separate as per original design) -->
+<app-search></app-search>

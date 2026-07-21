@@ -1,0 +1,321 @@
+<div class="compact-dashboard">
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <div class="logo-container">
+        <img
+          src="assets/images/logo.jpg"
+          alt="Vivadent Logo"
+          class="dashboard-logo"
+        />
+      </div>
+      <div class="header-text">
+        <h1 class="page-title">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard Vivadent
+        </h1>
+        <p class="page-subtitle">{{ selectedYear }} Overview</p>
+      </div>
+    </div>
+    <div class="header-filters">
+      <mat-form-field appearance="outline" class="compact-filter">
+        <mat-label>Year</mat-label>
+        <mat-select
+          [(value)]="selectedYear"
+          (selectionChange)="onYearChange($event.value)"
+        >
+          <mat-option *ngFor="let year of years" [value]="year">{{
+            year
+          }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="compact-filter">
+        <mat-label>Client</mat-label>
+        <mat-select
+          [(value)]="selectedClientId"
+          (selectionChange)="onClientSelected($event.value)"
+          (openedChange)="$event ? null : clearClientSearch()"
+        >
+          <div class="select-search-box">
+            <mat-form-field class="searchBox" appearance="outline">
+              <mat-icon matPrefix>search</mat-icon>
+              <input
+                #clientSearchInput
+                matInput
+                placeholder="Search client..."
+                autocomplete="off"
+                [(ngModel)]="clientFilterText"
+                [ngModelOptions]="{ standalone: true }"
+                (keyup)="applyClientSearch($event)"
+                (keydown)="$event.stopPropagation()"
+              />
+            </mat-form-field>
+          </div>
+          <mat-option [value]="null">All Clients</mat-option>
+          <mat-option
+            *ngFor="let client of filteredClientList"
+            [value]="client.id"
+          >
+            {{ client.name }} - {{ client.doctor_name }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="compact-loading">
+    <mat-spinner diameter="40"></mat-spinner>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading && dashboardData" class="dashboard-grid">
+    <!-- Row 1: Info Cards -->
+    <div class="info-cards-row">
+      <div class="info-card">
+        <div class="info-label">Average Order Price</div>
+        <div class="info-value">
+          {{ formatCurrency(dashboardData.overview.average_order_value) }}
+        </div>
+      </div>
+
+      <div class="info-card">
+        <div class="info-label">Collection Rate</div>
+        <div class="info-value">
+          {{ dashboardData.payment_distribution.collection_rate.toFixed(1) }}%
+        </div>
+      </div>
+
+      <div
+        class="info-card"
+        [ngClass]="
+          getGrowthClass(
+            dashboardData.comparison_with_previous_year.order_growth_percentage
+          )
+        "
+      >
+        <div class="info-label">Order Growth</div>
+        <div class="info-value">
+          <mat-icon>{{
+            getGrowthIcon(
+              dashboardData.comparison_with_previous_year
+                .order_growth_percentage
+            )
+          }}</mat-icon>
+          {{
+            dashboardData.comparison_with_previous_year.order_growth_percentage.toFixed(
+              1
+            )
+          }}%
+        </div>
+      </div>
+
+      <div
+        class="info-card"
+        [ngClass]="
+          getGrowthClass(
+            dashboardData.comparison_with_previous_year
+              .revenue_growth_percentage
+          )
+        "
+      >
+        <div class="info-label">Revenue Growth</div>
+        <div class="info-value">
+          <mat-icon>{{
+            getGrowthIcon(
+              dashboardData.comparison_with_previous_year
+                .revenue_growth_percentage
+            )
+          }}</mat-icon>
+          {{
+            dashboardData.comparison_with_previous_year.revenue_growth_percentage.toFixed(
+              1
+            )
+          }}%
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 2: Charts -->
+    <div class="charts-grid">
+      <!-- Chart 1: Orders -->
+      <div class="chart-card">
+        <h3>
+          <mat-icon>shopping_cart</mat-icon>
+          Orders
+        </h3>
+        <apx-chart
+          #ordersChart
+          [series]="ordersChartOptions.series!"
+          [chart]="ordersChartOptions.chart!"
+          [dataLabels]="ordersChartOptions.dataLabels!"
+          [plotOptions]="ordersChartOptions.plotOptions!"
+          [xaxis]="ordersChartOptions.xaxis!"
+          [yaxis]="ordersChartOptions.yaxis!"
+          [grid]="ordersChartOptions.grid!"
+          [colors]="ordersChartOptions.colors!"
+          [fill]="ordersChartOptions.fill!"
+          [tooltip]="ordersChartOptions.tooltip!"
+        >
+        </apx-chart>
+      </div>
+
+      <!-- Chart 2: Order Values -->
+      <div class="chart-card">
+        <h3>
+          <mat-icon>payments</mat-icon>
+          Order Values
+        </h3>
+        <apx-chart
+          #orderValuesChart
+          [series]="orderValuesChartOptions.series!"
+          [chart]="orderValuesChartOptions.chart!"
+          [dataLabels]="orderValuesChartOptions.dataLabels!"
+          [plotOptions]="orderValuesChartOptions.plotOptions!"
+          [xaxis]="orderValuesChartOptions.xaxis!"
+          [yaxis]="orderValuesChartOptions.yaxis!"
+          [grid]="orderValuesChartOptions.grid!"
+          [colors]="orderValuesChartOptions.colors!"
+          [fill]="orderValuesChartOptions.fill!"
+          [tooltip]="orderValuesChartOptions.tooltip!"
+        >
+        </apx-chart>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <!-- Chart 3: Monthly Order Value -->
+      <div class="chart-card">
+        <h3>
+          <mat-icon>show_chart</mat-icon>
+          Monthly Overview
+        </h3>
+        <apx-chart
+          #monthlyChart
+          [series]="monthlyChartOptions.series!"
+          [chart]="monthlyChartOptions.chart!"
+          [dataLabels]="monthlyChartOptions.dataLabels!"
+          [plotOptions]="monthlyChartOptions.plotOptions!"
+          [xaxis]="monthlyChartOptions.xaxis!"
+          [yaxis]="monthlyChartOptions.yaxis!"
+          [grid]="monthlyChartOptions.grid!"
+          [colors]="monthlyChartOptions.colors!"
+          [fill]="monthlyChartOptions.fill!"
+          [tooltip]="monthlyChartOptions.tooltip!"
+        >
+        </apx-chart>
+      </div>
+
+      <!-- Chart 4: Payment Status -->
+      <div class="chart-card">
+        <h3>
+          <mat-icon>donut_small</mat-icon>
+          Payment Status
+        </h3>
+        <apx-chart
+          #paymentChart
+          [series]="paymentChartOptions.series!"
+          [chart]="paymentChartOptions.chart!"
+          [labels]="paymentChartOptions.labels!"
+          [colors]="paymentChartOptions.colors!"
+          [dataLabels]="paymentChartOptions.dataLabels!"
+          [plotOptions]="paymentChartOptions.plotOptions!"
+          [legend]="paymentChartOptions.legend!"
+          [tooltip]="paymentChartOptions.tooltip!"
+        >
+        </apx-chart>
+        <div class="payment-breakdown">
+          <div class="payment-item paid">
+            <div class="payment-dot"></div>
+            <div class="payment-info">
+              <div class="payment-label">PAID</div>
+              <div class="payment-value">
+                {{
+                  formatCurrency(dashboardData.payment_distribution.paid.value)
+                }}
+              </div>
+              <div class="payment-count">
+                {{ dashboardData.payment_distribution.paid.count }} orders
+              </div>
+            </div>
+          </div>
+          <div class="payment-item unpaid">
+            <div class="payment-dot"></div>
+            <div class="payment-info">
+              <div class="payment-label">UNPAID</div>
+              <div class="payment-value">
+                {{
+                  formatCurrency(
+                    dashboardData.payment_distribution.unpaid.value
+                  )
+                }}
+              </div>
+              <div class="payment-count">
+                {{ dashboardData.payment_distribution.unpaid.count }} orders
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Row 3: Top Clients (if available) -->
+    <div *ngIf="dashboardData.top_clients" class="top-clients-section">
+      <div class="chart-card">
+        <h3>
+          <mat-icon>star</mat-icon>
+          Top 5 Clients by Revenue
+        </h3>
+        <div class="clients-list">
+          <div
+            class="client-item"
+            *ngFor="
+              let client of dashboardData.top_clients.by_value.slice(0, 5);
+              let i = index
+            "
+          >
+            <div class="client-rank">{{ i + 1 }}</div>
+            <div class="client-details">
+              <div class="client-name">{{ client.client_name }}</div>
+              <div class="client-doctor">{{ client.doctor_name }}</div>
+            </div>
+            <div class="client-stats">
+              <div class="client-value">
+                {{ formatCurrency(client.total_value) }}
+              </div>
+              <div class="client-count">{{ client.order_count }} orders</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>
+          <mat-icon>format_list_numbered</mat-icon>
+          Top 5 Clients by Orders
+        </h3>
+        <div class="clients-list">
+          <div
+            class="client-item"
+            *ngFor="
+              let client of dashboardData.top_clients.by_count.slice(0, 5);
+              let i = index
+            "
+          >
+            <div class="client-rank">{{ i + 1 }}</div>
+            <div class="client-details">
+              <div class="client-name">{{ client.client_name }}</div>
+              <div class="client-doctor">{{ client.doctor_name }}</div>
+            </div>
+            <div class="client-stats">
+              <div class="client-value">{{ client.order_count }} orders</div>
+              <div class="client-count">
+                {{ formatCurrency(client.total_value) }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

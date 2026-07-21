@@ -1,0 +1,96 @@
+<mat-card class="w-100">
+    <mat-card-content>
+        <mat-grid-list cols="4" rowHeight="40px">
+            <mat-grid-tile colspan="3">
+                <span class="title">Peticash List</span>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="1">
+                <a href="/peticash/create" class="create-button-on-list-page"
+                   color="info" mat-raised-button>Create Peticash
+                </a>
+            </mat-grid-tile>
+        </mat-grid-list>
+        <div style="display: flex; justify-content: space-between">
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Search</mat-label>
+                    <input (keyup)="applyFilter($event.target)" matInput>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Filter Type</mat-label>
+                    <mat-select (selectionChange)="onChangePeticashStatus($event.value)">
+                        <mat-option value="99"><span class="badge badge-accent rounded-pill">All Types</span>
+                        </mat-option>
+                        <mat-option value="1"><span class="badge badge-success rounded-pill">Paid</span></mat-option>
+                        <mat-option value="0"><span class="badge badge-primary rounded-pill">Unpaid</span></mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div></div>
+        </div>
+
+        <div class="table-responsive">
+            <table [dataSource]="dataSource" class="text-nowrap w-100" mat-table matSort>
+                <ng-container matColumnDef="id">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['id']}} </td>
+                </ng-container>
+
+
+                <ng-container matColumnDef="payment_date">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Expense Date</th>
+                    <td *matCellDef="let element" mat-cell>
+                        <p class="mb-0 fw-medium">{{element['payment_date'].substring(0, 10)}}</p>
+                    </td>
+                </ng-container>
+
+                <ng-container matColumnDef="status">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Type</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell>
+                        <span class="badge {{element['status'] == 1 ? 'badge-success': 'badge-primary'}} rounded-pill">{{element['status'] == 1 ? 'Paid' : 'Unpaid'}}</span>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="voucher_no">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Voucher No</th>
+                    <td *matCellDef="let element" class="fw-medium"
+                        mat-cell> {{element['voucher_no']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="amount">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Amount</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['amount']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="employee_id">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Paid By</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['employee']['name']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="purpose">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Remarks</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['purpose']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="actions">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Actions</th>
+                    <td *matCellDef="let element; let i = index" class="fw-medium" mat-cell>
+                        <div class="button-container">
+                            <button (click)="editPeticash(element['id'])" color="primary" mat-icon-button>
+                                <mat-icon aria-label="icon-button">edit_square</mat-icon>
+                            </button>
+                            <button (click)="deletePeticash(element['id'])" color="warn" mat-icon-button>
+                                <mat-icon aria-label="icon-button">cancel</mat-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+            </table>
+            <mat-paginator
+                    [length]="itemList.length"
+                    [pageSizeOptions]="[10, 30, 60, 100]" [pageSize]="10"
+                    aria-label="Select page">
+            </mat-paginator>
+        </div>
+
+    </mat-card-content>
+</mat-card>

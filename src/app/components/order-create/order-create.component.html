@@ -1,0 +1,456 @@
+<!--@ts-nocheck-->
+<div class="order-create-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <button mat-icon-button class="back-btn" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h4 class="page-title">
+        {{ updateOrderId ? "Edit Order" : "Create Order" }}
+      </h4>
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <mat-card class="form-card">
+    <mat-card-content>
+      <form [formGroup]="orderCreateForm" #ordForm="ngForm">
+        <!-- Order Details Section -->
+        <div class="section-title">
+          <mat-icon>assignment</mat-icon>
+          <span>Order Details</span>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Order Date</mat-label>
+              <input
+                matInput
+                formControlName="order_date"
+                (focus)="picker.open()"
+                [matDatepicker]="picker"
+                placeholder="Select date"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Delivery Date</mat-label>
+              <input
+                matInput
+                formControlName="delivery_date"
+                (focus)="picker2.open()"
+                [matDatepicker]="picker2"
+                placeholder="Select date"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="picker2"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #picker2></mat-datepicker>
+            </mat-form-field>
+          </div>
+          <div class="form-col">
+            <app-searchable-dropdown
+              [options]="employeeDropdownOptions"
+              label="Made By"
+              placeholder="Search employee..."
+              formControlName="employee_id"
+            ></app-searchable-dropdown>
+          </div>
+        </div>
+
+        <!-- Client Details Section -->
+        <div class="section-title">
+          <mat-icon>person</mat-icon>
+          <span>Client Details</span>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Bill To</mat-label>
+              <mat-select
+                formControlName="client_id"
+                (selectionChange)="onChangeClientOption($event.value)"
+                (openedChange)="$event ? null : clearClientSearch()"
+              >
+                <div class="select-search-box">
+                  <mat-form-field class="searchBox" appearance="outline">
+                    <mat-icon matPrefix>search</mat-icon>
+                    <input
+                      #clientSearchInput
+                      matInput
+                      placeholder="Search client..."
+                      autocomplete="off"
+                      [(ngModel)]="clientFilterText"
+                      [ngModelOptions]="{ standalone: true }"
+                      (keyup)="applyClientSearch($event)"
+                      (keydown)="$event.stopPropagation()"
+                    />
+                  </mat-form-field>
+                </div>
+                <mat-option
+                  *ngFor="let item of filteredClientList"
+                  [value]="item['id']"
+                >
+                  {{ item["name"] }}&nbsp;&nbsp;({{ item["doctor_name"] }})
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-col">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Address</mat-label>
+              <textarea readonly matInput placeholder="Address" rows="2">{{
+                clientAddress
+              }}</textarea>
+            </mat-form-field>
+          </div>
+          <div class="form-col">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Patient Name</mat-label>
+              <input
+                matInput
+                formControlName="patient_name"
+                placeholder="Enter patient name"
+                type="text"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Item Selection Section -->
+        <div class="section-title">
+          <mat-icon>inventory_2</mat-icon>
+          <span>Item Selection</span>
+        </div>
+        <div class="form-row">
+          <div class="form-col">
+            <mat-form-field appearance="outline">
+              <mat-label>Select Item</mat-label>
+              <mat-select
+                formControlName="single_item"
+                (selectionChange)="onChangeTeethItemOption($event.value)"
+                (openedChange)="$event ? null : clearItemSearch()"
+              >
+                <div class="select-search-box">
+                  <mat-form-field class="searchBox" appearance="outline">
+                    <mat-icon matPrefix>search</mat-icon>
+                    <input
+                      #itemSearchInput
+                      matInput
+                      placeholder="Search item..."
+                      autocomplete="off"
+                      [(ngModel)]="itemFilterText"
+                      [ngModelOptions]="{ standalone: true }"
+                      (keyup)="applyItemSearch($event)"
+                      (keydown)="$event.stopPropagation()"
+                    />
+                  </mat-form-field>
+                </div>
+                <mat-option
+                  *ngFor="let item of filteredItemList"
+                  [value]="item['id']"
+                >
+                  {{ item["name"] }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="form-col">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Order No</mat-label>
+              <input
+                matInput
+                formControlName="order_no"
+                placeholder="Enter order number"
+                type="text"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <!-- Left Side - Teeth Selection -->
+          <div class="teeth-section">
+            <div class="section-title small">
+              <mat-icon>grid_view</mat-icon>
+              <span>Teeth Selection</span>
+            </div>
+
+            <!-- Teeth Grid -->
+            <div class="teeth-grid-container">
+              <div class="teeth-grid">
+                <div class="teeth-row">
+                  <!-- Left Upper -->
+                  <div class="green-div">
+                    <div
+                      (click)="onSelectSingleTooth(item)"
+                      *ngFor="let item of leftUpper"
+                      class="tooth-num-div"
+                    >
+                      <span>{{ item }}</span>
+                      <i class="fal fa-tooth own-icon"></i>
+                    </div>
+                  </div>
+                  <!-- Right Upper -->
+                  <div class="green-div">
+                    <div
+                      (click)="onSelectSingleTooth(item)"
+                      *ngFor="let item of rightUpper"
+                      class="tooth-num-div"
+                    >
+                      <span>{{ item }}</span>
+                      <i class="fal fa-tooth own-icon"></i>
+                    </div>
+                  </div>
+                </div>
+                <div class="teeth-row">
+                  <!-- Left Down -->
+                  <div class="green-div">
+                    <div
+                      (click)="onSelectSingleTooth(item)"
+                      *ngFor="let item of leftDown"
+                      class="tooth-num-div"
+                    >
+                      <span>{{ item }}</span>
+                      <i class="fal fa-tooth own-icon"></i>
+                    </div>
+                  </div>
+                  <!-- Right Down -->
+                  <div class="green-div">
+                    <div
+                      (click)="onSelectSingleTooth(item)"
+                      *ngFor="let item of rightDown"
+                      class="tooth-num-div"
+                    >
+                      <span>{{ item }}</span>
+                      <i class="fal fa-tooth own-icon"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Jaw Buttons -->
+            <div class="button-group">
+              <button
+                (click)="onSelectSingleTooth('Upper Jaw')"
+                class="jaw-btn"
+                mat-raised-button
+              >
+                Upper Jaw
+              </button>
+              <button
+                (click)="onSelectSingleTooth('Lower Jaw')"
+                class="jaw-btn"
+                mat-raised-button
+              >
+                Lower Jaw
+              </button>
+              <!-- <button
+                (click)="onSelectSingleTooth('Both Jaw')"
+                class="jaw-btn"
+                mat-raised-button
+              >
+                Both Jaw
+              </button> -->
+            </div>
+
+            <!-- Size Buttons -->
+            <!-- <div class="button-group">
+              <button
+                (click)="onSelectSingleTooth('Small')"
+                class="size-btn"
+                mat-raised-button
+              >
+                Small
+              </button>
+              <button
+                (click)="onSelectSingleTooth('Medium')"
+                class="size-btn"
+                mat-raised-button
+              >
+                Medium
+              </button>
+              <button
+                (click)="onSelectSingleTooth('Large')"
+                class="size-btn"
+                mat-raised-button
+              >
+                Large
+              </button>
+            </div> -->
+
+            <!-- Shade Selection -->
+            <div class="shade-row">
+              <div class="shade-col">
+                <app-searchable-dropdown
+                  [options]="shadeGuideDropdownOptions"
+                  label="Select Shade Guide"
+                  placeholder="Search shade guide..."
+                  formControlName="shade_guide"
+                ></app-searchable-dropdown>
+              </div>
+              <div class="shade-col">
+                <app-searchable-dropdown
+                  [options]="shadeDropdownOptions"
+                  label="Shade"
+                  placeholder="Search shade..."
+                  formControlName="shade"
+                ></app-searchable-dropdown>
+              </div>
+            </div>
+
+            <!-- Order Note -->
+            <div class="note-section">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Order Note</mat-label>
+                <textarea
+                  formControlName="notes"
+                  matInput
+                  placeholder="Enter any notes..."
+                  rows="3"
+                ></textarea>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <!-- Right Side - Order Summary -->
+          <div class="summary-section">
+            <div class="section-title small">
+              <mat-icon>receipt_long</mat-icon>
+              <span>Order Summary</span>
+            </div>
+
+            <!-- Items Table -->
+            <div class="items-table-container">
+              <table [dataSource]="dataSource" class="items-table" mat-table>
+                <ng-container matColumnDef="actions">
+                  <th *matHeaderCellDef mat-header-cell>Actions</th>
+                  <td *matCellDef="let element; let i = index" mat-cell>
+                    <button
+                      (click)="deleteReceiptItem(i)"
+                      color="warn"
+                      mat-icon-button
+                      class="delete-item-btn"
+                    >
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="itemName">
+                  <th *matHeaderCellDef mat-header-cell>Item Name</th>
+                  <td *matCellDef="let element" mat-cell>
+                    {{ element["itemName"] }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="description">
+                  <th *matHeaderCellDef mat-header-cell>Description</th>
+                  <td *matCellDef="let element" mat-cell>
+                    {{ element["description"] }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="quantity">
+                  <th *matHeaderCellDef mat-header-cell>QTY</th>
+                  <td *matCellDef="let element" mat-cell>
+                    {{ element["quantity"] }}
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="price">
+                  <th *matHeaderCellDef mat-header-cell>Price</th>
+                  <td *matCellDef="let element" mat-cell>
+                    {{ element["price"] }}
+                  </td>
+                </ng-container>
+                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                <tr
+                  *matRowDef="let row; columns: displayedColumns"
+                  mat-row
+                ></tr>
+                <tr class="no-data-row" *matNoDataRow>
+                  <td
+                    [attr.colspan]="displayedColumns.length"
+                    class="no-data-cell"
+                  >
+                    <span>No items added yet</span>
+                  </td>
+                </tr>
+              </table>
+            </div>
+
+            <!-- Totals Section -->
+            <div class="totals-section">
+              <div class="total-row">
+                <div class="total-label">
+                  <input
+                    class="additional-input"
+                    matInput
+                    formControlName="additional_info"
+                    placeholder="Additional Info"
+                    type="text"
+                  />
+                </div>
+                <div class="total-value">
+                  <input
+                    (ngModelChange)="calculateSubTotal()"
+                    class="price-input"
+                    matInput
+                    formControlName="additional_price"
+                    placeholder="0.00"
+                    type="number"
+                  />
+                </div>
+              </div>
+              <div class="total-row">
+                <div class="total-label">Sub Total</div>
+                <div class="total-value highlight">{{ subTotal }}</div>
+              </div>
+              <div class="total-row">
+                <div class="total-label">Discount</div>
+                <div class="total-value">
+                  <input
+                    (ngModelChange)="calculateTotal()"
+                    class="price-input"
+                    matInput
+                    formControlName="discount"
+                    placeholder="0.00"
+                    type="number"
+                  />
+                </div>
+              </div>
+              <div class="total-row grand-total">
+                <div class="total-label">Total</div>
+                <div class="total-value">{{ total }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <button (click)="cancel()" class="cancel-btn" mat-raised-button>
+            <mat-icon>close</mat-icon>
+            Cancel
+          </button>
+          <button
+            (click)="submitOrder()"
+            type="submit"
+            class="submit-btn"
+            mat-raised-button
+          >
+            <mat-icon>{{ updateOrderId ? "save" : "add" }}</mat-icon>
+            {{ updateOrderId ? "Update Order" : "Create Order" }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

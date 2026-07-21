@@ -1,0 +1,191 @@
+<!--@ts-nocheck-->
+<div class="today-delivered-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <h4 class="page-title">Today Orders Delivery List</h4>
+      <span class="order-count" *ngIf="itemList?.length">{{ itemList.length }} orders</span>
+      <a [href]="getReportDownloadUrl()" target="_blank" class="print-report-btn">
+        <button mat-raised-button color="primary">
+          <mat-icon>print</mat-icon>
+          Print Report
+        </button>
+      </a>
+    </div>
+    <div class="total-amount-badge">
+      Total Amount: <strong>{{ totalAmount }}</strong>
+    </div>
+  </div>
+
+  <!-- Card Container -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <!-- Toolbar Section -->
+      <div class="toolbar-section">
+        <div class="search-box">
+          <mat-icon class="search-icon">search</mat-icon>
+          <input
+            #searchInput
+            type="text"
+            placeholder="Search orders by order no, client, patient..."
+            (input)="applyFilter($event.target)"
+            class="search-input"
+          />
+        </div>
+        <div class="date-picker-wrapper">
+          <mat-icon class="calendar-icon">calendar_today</mat-icon>
+          <input
+            (dateChange)="addEvent($event)"
+            (focus)="picker.open()"
+            [matDatepicker]="picker"
+            [value]="selectedDate"
+            placeholder="Select a date"
+            class="date-input"
+          />
+          <mat-datepicker #picker></mat-datepicker>
+        </div>
+      </div>
+
+      <!-- Table Container -->
+      <div class="table-container">
+        <table [dataSource]="dataSource" class="orders-table" mat-table matSort>
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['id'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Order No Column -->
+          <ng-container matColumnDef="order_no">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Order No</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text order-no">{{ element['order_no'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Client Name Column -->
+          <ng-container matColumnDef="client_id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Client</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['client']['name'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Doctor Name Column -->
+          <ng-container matColumnDef="doctor_name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Doctor</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['client']['doctor_name'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Order Date Column -->
+          <ng-container matColumnDef="order_date">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Order Date</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text date">{{ element['order_date'].substring(0, 10) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Patient Name Column -->
+          <ng-container matColumnDef="patient_name">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Patient</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['patient_name'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Delivery Date Column -->
+          <ng-container matColumnDef="delivery_date">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Delivery</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text date">{{ element['delivery_date'].substring(0, 10) }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Made By Column -->
+          <ng-container matColumnDef="employee_id">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Made By</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text">{{ element['employee']['name'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Amount Column -->
+          <ng-container matColumnDef="total_amount">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Amount</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="cell-text amount">{{ element['total_amount'] }}</span>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Status</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="status-badge" [ngClass]="getStatusClass(element['status'])">
+                {{ element['status'] }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Payment Status Column -->
+          <ng-container matColumnDef="payment_status">
+            <th *matHeaderCellDef mat-header-cell mat-sort-header>Payment</th>
+            <td *matCellDef="let element" mat-cell>
+              <span class="status-badge" [ngClass]="getPaymentStatusClass(element['payment_status'])">
+                {{ element['payment_status'] }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th *matHeaderCellDef mat-header-cell>Actions</th>
+            <td *matCellDef="let element" mat-cell>
+              <div class="action-buttons">
+                <a
+                  [href]="apiConfig.downloadPdfUrl + 'order/' + element['id']"
+                  target="_blank"
+                >
+                  <button
+                    mat-icon-button
+                    class="action-btn print-btn"
+                    [matTooltip]="'Print Order'"
+                  >
+                    <mat-icon>print</mat-icon>
+                  </button>
+                </a>
+              </div>
+            </td>
+          </ng-container>
+
+          <tr *matHeaderRowDef="displayedColumns; sticky: true" mat-header-row></tr>
+          <tr *matRowDef="let row; columns: displayedColumns" mat-row></tr>
+
+          <!-- No Data Row -->
+          <tr class="no-data-row" *matNoDataRow>
+            <td [attr.colspan]="displayedColumns.length" class="no-data-cell">
+              <div class="no-data-content">
+                <mat-icon>inbox</mat-icon>
+                <span>No orders found</span>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+
+      <!-- Paginator -->
+      <mat-paginator
+        [length]="itemList.length"
+        [pageSize]="100"
+        [hidePageSize]="true"
+        aria-label="Select page"
+        class="table-paginator"
+      >
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

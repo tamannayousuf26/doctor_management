@@ -1,0 +1,43 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Order Status Change</h4>
+    <div class="container">
+      <mat-form-field appearance="outline">
+        <mat-label>Select Status</mat-label>
+        <mat-select
+          [(ngModel)]="selectedStatusId"
+          (selectionChange)="onChangeStatusOption($event.value)"
+        >
+          <mat-option
+            *ngFor="let item of statusOption"
+            [value]="item['statusId']"
+          >
+            {{ item["statusName"] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-grid-list cols="4" rowHeight="40px">
+      <mat-grid-tile colspan="3">
+        <button
+          (click)="onSubmit()"
+          class="block-btn-global submit-btn-global"
+          color="primary"
+          mat-raised-button
+        >
+          Submit
+        </button>
+      </mat-grid-tile>
+      <mat-grid-tile colspan="1">
+        <button
+          class="block-btn-global cancel-btn-global"
+          color="danger"
+          mat-raised-button
+          (click)="goBack()"
+        >
+          Cancel
+        </button>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

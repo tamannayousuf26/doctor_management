@@ -1,0 +1,63 @@
+<div class="pagination-container">
+  <div class="pagination">
+    <!-- Previous Button -->
+    <button
+      class="pagination-btn nav-btn"
+      [disabled]="current === first"
+      (click)="prevBtnClick()"
+    >
+      <mat-icon>chevron_left</mat-icon>
+    </button>
+
+    <!-- First Page -->
+    <button
+      *ngIf="current > 3"
+      class="pagination-btn page-btn"
+      [class.active]="current === first"
+      (click)="numberBtnClick(first)"
+    >
+      {{ first }}
+    </button>
+
+    <!-- Left Dots -->
+    <span *ngIf="current > 4" class="pagination-dots">...</span>
+
+    <!-- Page Numbers -->
+    <ng-container *ngFor="let page of getPageNumbers()">
+      <button
+        class="pagination-btn page-btn"
+        [class.active]="current === page"
+        (click)="numberBtnClick(page)"
+      >
+        {{ page }}
+      </button>
+    </ng-container>
+
+    <!-- Right Dots -->
+    <span *ngIf="current < last - 3" class="pagination-dots">...</span>
+
+    <!-- Last Page -->
+    <button
+      *ngIf="current < last - 2 && last > 5"
+      class="pagination-btn page-btn"
+      [class.active]="current === last"
+      (click)="numberBtnClick(last)"
+    >
+      {{ last }}
+    </button>
+
+    <!-- Next Button -->
+    <button
+      class="pagination-btn nav-btn"
+      [disabled]="current === last"
+      (click)="nextBtnClick()"
+    >
+      <mat-icon>chevron_right</mat-icon>
+    </button>
+  </div>
+
+  <!-- Page Info -->
+  <div class="page-info">
+    Page {{ current }} of {{ last }}
+  </div>
+</div>

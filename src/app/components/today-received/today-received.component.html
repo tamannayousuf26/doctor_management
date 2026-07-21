@@ -1,0 +1,78 @@
+<!--@ts-nocheck-->
+<mat-card class="w-100">
+    <mat-card-content>
+        <h4 class="mb-32 title">Today Orders Receive List</h4>
+        <div style="display: flex; justify-content: space-between">
+            <div>
+                <mat-form-field appearance="fill">
+                    <mat-label>Search</mat-label>
+                    <input (keyup)="applyFilter($event.target)" matInput>
+                </mat-form-field>
+            </div>
+            <div>
+                <mat-form-field appearance="fill">
+                    <input (dateChange)="addEvent($event)"
+                           (focus)="picker.open()" [matDatepicker]="picker" matInput
+                           placeholder="Select a date">
+                </mat-form-field>
+                <mat-datepicker #picker></mat-datepicker>
+            </div>
+            <h4 style="text-size:1.2rem; text-weight:600; color:grey;padding:15px 40px 15px 0px;">Total
+                Amount: {{totalAmount}}</h4>
+        </div>
+
+        <div class="table-responsive">
+            <table [dataSource]="dataSource" class="text-nowrap w-100" mat-table matSort>
+                <ng-container matColumnDef="id">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header>ID</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['id']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="order_no">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Order No</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['order_no']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="client_id">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Client Name</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['client']['name']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="order_date">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Order Date</th>
+                    <td *matCellDef="let element" mat-cell>
+                        <p class="mb-0 fw-medium">{{element['order_date'].substring(0, 10)}}</p>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="patient_name">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Patient Name</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['patient_name']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="delivery_date">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Delivery Date</th>
+                    <td *matCellDef="let element" class="fw-medium"
+                        mat-cell> {{element['delivery_date'].substring(0, 10)}} </td>
+                </ng-container>
+                <ng-container matColumnDef="employee_id">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Made By</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['employee']['name']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="total_amount">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Amount</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['total_amount']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Status</th>
+                    <td *matCellDef="let element; let i = index" class="fw-medium" mat-cell> {{element['status'] }} <br>
+                        <!--  <button (click)="changeStatusOrder(element['id'])" mat-icon-button style="color: #00C292FF">
+                              <mat-icon aria-label="icon-button">edit_square</mat-icon>
+                          </button>-->
+                    </td>
+                </ng-container>
+                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+            </table>
+            <mat-paginator length="itemList.length"
+                           [pageSizeOptions]="[10, 30, 60, 100]" [pageSize]="10"
+                           aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>

@@ -1,0 +1,74 @@
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Peticash Create</h4>
+        <hr/>
+        <form [formGroup]="peticashCreateForm">
+            <div class="container">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Paid By</mat-label>
+                        <mat-select formControlName="employee_id">
+                            <mat-option *ngFor="let item of employeeList"
+                                        [value]="item['id']">{{item['name']}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline" class="w-100 fs-16">
+                        <mat-label>Voucher No</mat-label>
+                        <input matInput formControlName="voucher_no" placeholder="Voucher No" type="text">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="container">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Status</mat-label>
+                        <mat-select formControlName="status">
+                            <mat-option *ngFor="let item of peticashStatusList"
+                                        [value]="item['value']">{{item['name']}}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline" class="w-100 fs-16">
+                        <mat-label>Amount</mat-label>
+                        <input matInput formControlName="amount" placeholder="Write Amount" type="number">
+                    </mat-form-field>
+                </div>
+            </div>
+            <div class="container">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Payment Date</mat-label>
+                        <input matInput formControlName="payment_date"
+                               (focus)="picker.open()" [matDatepicker]="picker" placeholder="Payment Date">
+                        <mat-icon matSuffix>today</mat-icon>
+                        <mat-hint>DD/MM/YYYY</mat-hint>
+                    </mat-form-field>
+                    <mat-datepicker #picker></mat-datepicker>
+                </div>
+                <div>
+                    <mat-form-field appearance="outline" class="w-100 fs-16">
+                        <mat-label>Purpose</mat-label>
+                        <textarea matInput formControlName="purpose" placeholder="Peticash Purpose"
+                                  rows="2"></textarea>
+                    </mat-form-field>
+                </div>
+            </div>
+            <mat-grid-list cols="4" rowHeight="40px">
+                <mat-grid-tile colspan="3">
+                    <button (click)="submit()" type="submit" class="block-btn-global submit-btn-global"
+                            color="primary" mat-raised-button>
+                        Create
+                    </button>
+                </mat-grid-tile>
+                <mat-grid-tile colspan="1">
+                    <button (click)="cancel()" class="block-btn-global cancel-btn-global" color="danger"
+                            mat-raised-button>Cancel
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </form>
+    </div>
+</div>

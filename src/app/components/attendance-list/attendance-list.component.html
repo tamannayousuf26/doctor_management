@@ -1,0 +1,52 @@
+<mat-card class="w-100">
+    <mat-card-content>
+        <mat-grid-list cols="4" rowHeight="40px">
+            <mat-grid-tile colspan="3">
+                <span class="title">Attendance</span>
+            </mat-grid-tile>
+            <mat-grid-tile colspan="1">
+                <button (click)="createAttendance()" class="create-attendance"
+                        color="info" mat-raised-button>Create Attendance
+                </button>
+            </mat-grid-tile>
+        </mat-grid-list>
+
+        <mat-form-field appearance="fill">
+            <mat-label>Search</mat-label>
+            <input (keyup)="applyFilter($event.target)" matInput>
+        </mat-form-field>
+        <div class="table-responsive">
+            <table [dataSource]="dataSource" class="text-nowrap w-100" mat-table matSort>
+                <ng-container matColumnDef="date">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Attendance Date</th>
+                    <td *matCellDef="let element" mat-cell>
+                        <p class="mb-0 fw-medium">{{element['date']}}</p>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="name">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Employee Name</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['name']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="id">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header>Employee ID</th>
+                    <td *matCellDef="let element" class="fw-medium" mat-cell> {{element['id']}} </td>
+                </ng-container>
+                <ng-container matColumnDef="status">
+                    <th *matHeaderCellDef mat-header-cell mat-sort-header> Present Info</th>
+                    <td *matCellDef="let element" mat-cell>
+                        <span class="badge {{element.badge}} rounded-pill">{{element['status']}}</span>
+                    </td>
+                </ng-container>
+
+                <tr *matHeaderRowDef="displayedColumns" mat-header-row></tr>
+                <tr *matRowDef="let row; columns: displayedColumns;" mat-row></tr>
+            </table>
+            <mat-paginator
+                    [length]="attendanceList.length"
+                    [pageSizeOptions]="[10, 30, 60, 100]"
+                    [pageSize]="10"
+                    aria-label="Select page">
+            </mat-paginator>
+        </div>
+    </mat-card-content>
+</mat-card>
